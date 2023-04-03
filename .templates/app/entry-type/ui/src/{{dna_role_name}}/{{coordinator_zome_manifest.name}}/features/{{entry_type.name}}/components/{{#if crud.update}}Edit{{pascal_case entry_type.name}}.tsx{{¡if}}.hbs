@@ -27,10 +27,10 @@ const EditEntry = ({currentRecord, onEditCanceled, onEntryUpdated} : IEditEntryP
   const client = useContext(ClientContext);
   const updateErrorRef = useRef(null);
 
-  const current{{pascal_case entry_type.name}} = decode((currentRecord.entry as any).Present.entry) as {{pascal_case entry_type.name}}; // decode logic for currentRecord
+  const current{{pascal_case entry_type.name}} = decode((currentRecord.entry as any).Present.entry) as {{pascal_case entry_type.name}};
   const [{{snake_case entry_type.name}}, set{{pascal_case entry_type.name}}] = useState<{{pascal_case entry_type.name}}>(current{{pascal_case entry_type.name}});
 
-  const is{{pascal_case entry_type.name}}Valid = true; // calculated state for entry validation
+  const is{{pascal_case entry_type.name}}Valid = true;
 
   const update{{pascal_case entry_type.name}} = async () => {
     try {
