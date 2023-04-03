@@ -79,7 +79,7 @@ const EditEntry = ({currentRecord, onEditCanceled, onEntryUpdated} : IEditEntryP
           {{#uniq_lines}}
             {{#each entry_type.fields}}
               {{#if widget}}
-          {{> (concat field_type.type "/" widget "/edit/render") }}
+          {{> (concat field_type.type "/" widget "/edit/render") field_name=field_name }}
               {{/if}}
             {{/each}}
           {{/uniq_lines}}
