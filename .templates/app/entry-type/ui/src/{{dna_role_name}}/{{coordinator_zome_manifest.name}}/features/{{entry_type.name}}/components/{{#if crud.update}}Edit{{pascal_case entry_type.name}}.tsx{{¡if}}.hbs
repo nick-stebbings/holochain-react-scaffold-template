@@ -27,9 +27,24 @@ const EditEntry = ({currentRecord, onEditCanceled, onEntryUpdated} : IEditEntryP
 
   const current{{pascal_case entry_type.name}}TEST = 'atest';
   const update{{pascal_case entry_type.name}} = async () => {
-    // Logic to update the entry
-    // On success, call onEntryUpdated(updateRecord.signed_action.hashed.hash)
-    // On error, show Snackbar
+     try {
+        const updateRecord: Record = await this.client.callZome({
+          cap_secret: null,
+          role_name: '{{dna_role_name}}',
+          zome_name: '{{coordinator_zome_manifest.name}}',
+          fn_name: 'update_{{snake_case entry_type.name}}',
+          payload: {
+{{#if link_from_original_to_each_update}}
+            original_{{snake_case entry_type.name}}_hash: this.original{{pascal_case entry_type.name}}Hash,
+{{/if}}
+            previous_{{snake_case entry_type.name}}_hash: this.currentRecord.signed_action.hashed.hash,
+            updated_{{snake_case entry_type.name}}: {{camel_case entry_type.name}}
+          }
+        });
+        onEntryUpdated(updateRecord.signed_action.hashed.hash)
+      } catch (e: any) {
+        // On error, show Snackbar
+      }
   };
 
   return (
