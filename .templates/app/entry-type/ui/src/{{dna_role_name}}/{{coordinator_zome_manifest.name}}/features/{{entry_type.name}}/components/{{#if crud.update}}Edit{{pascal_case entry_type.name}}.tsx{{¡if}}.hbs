@@ -1,0 +1,58 @@
+import React, { useState, useContext, useRef } from 'react';
+import { AppAgentClient, Record, AgentPubKey, EntryHash, ActionHash, DnaHash } from '@holochain/client';
+
+import '@material/mwc-button';
+import '@material/mwc-snackbar';
+
+import { {{pascal_case entry_type.name}}{{#each entry_type.fields}}{{#if (eq field_type.type "Enum")}}, {{field_type.label}}{{/if}}{{/each}} } from './types';
+import EntryField from './EntryField';
+
+interface IEditEntryProps {
+  currentRecord: Record;
+  original{{pascal_case entry_type.name}}Hash: EntryHash;
+  onEditCanceled?: () => void;
+  onEntryUpdated?: () => void;
+}
+
+const EditEntry = (props : IEditEntryProps) => {
+  const client = useContext(AppAgentClientContext);
+  const updateErrorRef = useRef(null);
+
+  const current{{pascal_case entry_type.name}} = decode((currentRecord.entry as any).Present.entry) as {{pascal_case entry_type.name}}; // decode logic for currentRecord
+  const [entry, setEntry] = useState<{{pascal_case entry_type.name}}>(current{{pascal_case entry_type.name}});
+
+  const is{{pascal_case entry_type.name}}Valid = true; // calculated state for entry validation
+
+  const update{{pascal_case entry_type.name}} = async () => {
+    // Logic to update the entry
+    // On success, call onEntryUpdated(updateRecord.signed_action.hashed.hash)
+    // On error, show Snackbar
+  };
+
+  return (
+    <>
+      <mwc-snackbar ref={updateErrorRef}></mwc-snackbar>
+
+      <div>
+        <span>Edit {{title_case entry_type.name}}</span>
+
+        // TODO: add entry fields
+        <div>
+          <mwc-button
+            outlined
+            label="Cancel"
+            onClick={onEditCanceled}
+          ></mwc-button>
+          <mwc-button
+            raised
+            label="Save"
+            disabled={!is{{pascal_case entry_type.name}}Valid}
+            onClick={update{{pascal_case entry_type.name}}}
+          ></mwc-button>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default EditEntry;
