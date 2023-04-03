@@ -1,5 +1,1 @@
-<div style="display: flex; flex-direction: row">
-  <span style="margin-right: 4px">{{label}}</span>
-
-  <mwc-slider {{#if variable_to_read}}:value="{{variable_to_read}}" {{/if}}@input="{{variable_to_change}} = $event.detail.value" discrete></mwc-slider>
-</div>
+<SlRange label="{{label}}" name="{{field_name}}" value=&#123;{{snake_case entry_type.name}}.{{field_name}}&#125; onChange=&#123handleChange&#123; {{#if required}}required{{/if}} />
