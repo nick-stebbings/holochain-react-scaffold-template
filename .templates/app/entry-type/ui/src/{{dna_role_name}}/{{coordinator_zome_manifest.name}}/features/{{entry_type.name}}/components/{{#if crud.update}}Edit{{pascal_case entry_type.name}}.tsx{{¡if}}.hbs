@@ -6,8 +6,7 @@ import { decode } from '@msgpack/msgpack';
 import '@material/mwc-button';
 import '@material/mwc-snackbar';
 
-import { {{pascal_case entry_type.name}}{{#each entry_type.fields}}{{#if (eq field_type.type "Enum")}}, {{field_type.label}}{{/if}}{{/each}} } from '../../../types';
-import EntryField from '../../../EntryField';
+import { {{pascal_case entry_type.name}}{{#each entry_type.fields}}{{#if (eq field_type.type "Enum")}}, {{field_type.label}}{{/if}}{{/each}} } from '../types';
 
 interface IEditEntryProps {
   currentRecord: Record;
@@ -54,7 +53,14 @@ const EditEntry = ({currentRecord, onEditCanceled, onEntryUpdated} : IEditEntryP
       <div>
         <span>Edit {{title_case entry_type.name}}</span>
 
-        // TODO: add entry fields
+        {{#uniq_lines}}
+          {{#each entry_type.fields}}
+            {{#if widget}}
+        {{> (concat field_type.type "/" widget "/edit/imports") }}
+
+            {{/if}}
+          {{/each}}
+        {{/uniq_lines}}
         <div>
           <mwc-button
             outlined
