@@ -1,11 +1,13 @@
 import React, { useState, useContext, useRef } from 'react';
 import { AppAgentClient, Record, AgentPubKey, EntryHash, ActionHash, DnaHash } from '@holochain/client';
+import { ClientContext } from '../../../../../clientContext';
+import { decode } from '@msgpack/msgpack';
 
 import '@material/mwc-button';
 import '@material/mwc-snackbar';
 
-import { {{pascal_case entry_type.name}}{{#each entry_type.fields}}{{#if (eq field_type.type "Enum")}}, {{field_type.label}}{{/if}}{{/each}} } from './types';
-import EntryField from './EntryField';
+import { {{pascal_case entry_type.name}}{{#each entry_type.fields}}{{#if (eq field_type.type "Enum")}}, {{field_type.label}}{{/if}}{{/each}} } from '../../../types';
+import EntryField from '../../../EntryField';
 
 interface IEditEntryProps {
   currentRecord: Record;
@@ -14,8 +16,8 @@ interface IEditEntryProps {
   onEntryUpdated?: () => void;
 }
 
-const EditEntry = (props : IEditEntryProps) => {
-  const client = useContext(AppAgentClientContext);
+const EditEntry = ({currentRecord, onEditCanceled, onEntryUpdated} : IEditEntryProps) => {
+  const client = useContext(ClientContext);
   const updateErrorRef = useRef(null);
 
   const current{{pascal_case entry_type.name}} = decode((currentRecord.entry as any).Present.entry) as {{pascal_case entry_type.name}}; // decode logic for currentRecord
@@ -23,6 +25,7 @@ const EditEntry = (props : IEditEntryProps) => {
 
   const is{{pascal_case entry_type.name}}Valid = true; // calculated state for entry validation
 
+  const current{{pascal_case entry_type.name}}TEST = 'atest';
   const update{{pascal_case entry_type.name}} = async () => {
     // Logic to update the entry
     // On success, call onEntryUpdated(updateRecord.signed_action.hashed.hash)
