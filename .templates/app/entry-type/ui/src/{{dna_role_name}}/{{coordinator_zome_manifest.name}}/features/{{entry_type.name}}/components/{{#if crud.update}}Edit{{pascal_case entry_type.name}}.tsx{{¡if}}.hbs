@@ -5,11 +5,12 @@ import { decode } from '@msgpack/msgpack';
 import { serialize } from '@shoelace-style/shoelace/dist/utilities/form.js';
 
 import '@material/mwc-button';
-import '@material/mwc-snackbar';
+import { SlAlert, SlButton, SlIcon } from '@shoelace-style/shoelace/dist/react';
 {{#uniq_lines}}
   {{#each entry_type.fields}}
     {{#if widget}}
 {{> (concat field_type.type "/" widget "/edit/imports") }}
+
     {{/if}}
   {{/each}}
 {{/uniq_lines}}
@@ -50,7 +51,7 @@ const EditEntry = ({currentRecord, onEditCanceled, onEntryUpdated} : IEditEntryP
       });
       onEntryUpdated!(updateRecord.signed_action.hashed.hash);
     } catch (e: any) {
-      // On error, show Snackbar
+      updateErrorRef.current.toast();
     }
   };
 
@@ -71,8 +72,12 @@ const EditEntry = ({currentRecord, onEditCanceled, onEntryUpdated} : IEditEntryP
 
   return (
     <>
-      <mwc-snackbar ref={updateErrorRef}></mwc-snackbar>
-
+      <SlAlert variant="warning" ref={updateErrorRef}>
+        <SlIcon slot="icon" name="exclamation-triangle" />
+        <strong>Oh dear!</strong>
+        <br />
+          There was an error updating your record
+      </SlAlert>
       <div>
         <span>Edit {{title_case entry_type.name}}</span>
         <form ref={formRef} onSubmit={handleSubmit}>
