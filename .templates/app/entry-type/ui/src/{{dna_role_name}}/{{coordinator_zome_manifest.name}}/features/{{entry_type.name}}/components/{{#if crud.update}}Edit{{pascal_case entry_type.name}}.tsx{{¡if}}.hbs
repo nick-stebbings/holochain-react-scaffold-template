@@ -57,8 +57,8 @@ const EditEntry = ({currentRecord, onEditCanceled, onEntryUpdated} : IEditEntryP
   const handleChange = async (e: any) => {
     const value = e.target.value;
 
-    setState({
-      ...state,
+    set{{pascal_case entry_type.name}}({
+      ...{{snake_case entry_type.name}},
       [e.target.name]: value
     });
   }
@@ -80,6 +80,7 @@ const EditEntry = ({currentRecord, onEditCanceled, onEntryUpdated} : IEditEntryP
             {{#each entry_type.fields}}
               {{#if widget}}
           {{> (concat field_type.type "/" widget "/edit/render") field_name=field_name entry_name=(snake_case ../entry_type.name)}}
+
               {{/if}}
             {{/each}}
           {{/uniq_lines}}
