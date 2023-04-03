@@ -1,5 +1,5 @@
 import React, { useState, useContext, useRef } from 'react';
-import { AppAgentClient, Record, AgentPubKey, EntryHash, ActionHash, DnaHash } from '@holochain/client';
+import { AppAgentClient, Record, EntryHash, ActionHash } from '@holochain/client';
 import { ClientContext } from '../../../../../clientContext';
 import { decode } from '@msgpack/msgpack';
 
@@ -13,7 +13,7 @@ interface IEditEntryProps {
   currentRecord: Record;
   original{{pascal_case entry_type.name}}Hash: EntryHash;
   onEditCanceled?: () => void;
-  onEntryUpdated?: () => void;
+  onEntryUpdated?: (actionHash: ActionHash) => void;
 }
 
 const EditEntry = ({currentRecord, onEditCanceled, onEntryUpdated} : IEditEntryProps) => {
@@ -21,14 +21,14 @@ const EditEntry = ({currentRecord, onEditCanceled, onEntryUpdated} : IEditEntryP
   const updateErrorRef = useRef(null);
 
   const current{{pascal_case entry_type.name}} = decode((currentRecord.entry as any).Present.entry) as {{pascal_case entry_type.name}}; // decode logic for currentRecord
-  const [entry, setEntry] = useState<{{pascal_case entry_type.name}}>(current{{pascal_case entry_type.name}});
+  const [{{snake_case entry_type.name}}, set{{pascal_case entry_type.name}}] = useState<{{pascal_case entry_type.name}}>(current{{pascal_case entry_type.name}});
 
   const is{{pascal_case entry_type.name}}Valid = true; // calculated state for entry validation
 
   const current{{pascal_case entry_type.name}}TEST = 'atest';
   const update{{pascal_case entry_type.name}} = async () => {
      try {
-        const updateRecord: Record = await this.client.callZome({
+        const updateRecord: Record = await client.callZome({
           cap_secret: null,
           role_name: '{{dna_role_name}}',
           zome_name: '{{coordinator_zome_manifest.name}}',
@@ -37,11 +37,11 @@ const EditEntry = ({currentRecord, onEditCanceled, onEntryUpdated} : IEditEntryP
 {{#if link_from_original_to_each_update}}
             original_{{snake_case entry_type.name}}_hash: this.original{{pascal_case entry_type.name}}Hash,
 {{/if}}
-            previous_{{snake_case entry_type.name}}_hash: this.currentRecord.signed_action.hashed.hash,
+            previous_{{snake_case entry_type.name}}_hash: currentRecord.signed_action.hashed.hash,
             updated_{{snake_case entry_type.name}}: {{camel_case entry_type.name}}
           }
         });
-        onEntryUpdated(updateRecord.signed_action.hashed.hash)
+        onEntryUpdated!(updateRecord.signed_action.hashed.hash);
       } catch (e: any) {
         // On error, show Snackbar
       }
