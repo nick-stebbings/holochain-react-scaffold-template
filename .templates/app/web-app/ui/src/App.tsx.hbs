@@ -7,76 +7,76 @@ import '@material/mwc-circular-progress';
 import { CircularProgressBase } from '@material/mwc-circular-progress/mwc-circular-progress-base';
 
 declare global {
-namespace JSX {
-interface IntrinsicElements {
-'mwc-circular-progress': Partial<CircularProgressBase>
-  }
-  }
-  }
+    namespace JSX {
+        interface IntrinsicElements {
+            'mwc-circular-progress': Partial<CircularProgressBase>
+        }
+    }
+}
 
-  function App() {
-  const [loading, setLoading] = useState(true);
-  const [count, setCount] = useState<number>(0);
+function App() {
+    const [loading, setLoading] = useState(true);
+    const [count, setCount] = useState<number>(0);
     const [client, setClient] = useState<AppAgentWebsocket>();
 
-      useEffect(() => {
-      async function initClient() {
-      // We pass '' as url because it will dynamically be replaced in launcher environments
-      setClient(await AppAgentWebsocket.connect('', '{{app_name}}'));
+    useEffect(() => {
+        async function initClient() {
+            // We pass '' as url because it will dynamically be replaced in launcher environments
+            setClient(await AppAgentWebsocket.connect('', '{{app_name}}'));
 
-      setLoading(false)
-      }
-      initClient();
-      }, []);
+            setLoading(false)
+        }
+        initClient();
+    }, []);
 
-      return loading
-      ? (<mwc-circular-progress indeterminate></mwc-circular-progress>)
-      : (
-      <div className="App">
-        <h1>Holochain + React</h1>
-        <div className="card">
-          <button onClick={()=> setCount((count) => count + 1)}>
-            count is {count}
-          </button>
-        </div>
-        <div id="content">
-          <h2>EDIT ME! Add the components of your app here.</h2>
+    return loading
+        ? (<mwc-circular-progress indeterminate></mwc-circular-progress>)
+        : (
+            <div className="App">
+                <h1>Holochain + React</h1>
+                <div className="card">
+                    <button onClick={() => setCount((count) => count + 1)}>
+                        count is {count}
+                    </button>
+                </div>
+                <div id="content">
+                    <h2>EDIT ME! Add the components of your app here.</h2>
 
-          <span>Look in the <code>ui/src/DNA/ZOME</code> folders for UI elements that are generated with <br />
-            <code>hc scaffold entry-type</code>, <code>hc scaffold collection</code> and
-            <code>hc scaffold link-type</code> <br /> and
-            add them here as appropriate.</span> <br /> <br />
+                    <span>Look in the <code>ui/src/DNA/ZOME</code> folders for UI elements that are generated with <br />
+                        <code>hc scaffold entry-type</code>, <code>hc scaffold collection</code> and
+                        <code>hc scaffold link-type</code> <br /> and
+                        add them here as appropriate.</span> <br /> <br />
 
-          <span>For example, if you have scaffolded a "todos" dna, a "todos" zome, a "todo_item" entry type, and a
-            collection
-            called "all_todos", you might want to add an element here to create and list your todo items, with the
-            generated <br />
-            <code>ui/src/todos/todos/AllTodos.vue</code> <br />and <br /><code>ui/src/todos/todos/CreateTodo.vue</code>
-            <br /> elements.</span> <br /> <br />
+                    <span>For example, if you have scaffolded a "todos" dna, a "todos" zome, a "todo_item" entry type, and a
+                        collection
+                        called "all_todos", you might want to add an element here to create and list your todo items, with the
+                        generated <br />
+                        <code>ui/src/todos/todos/AllTodos.vue</code> <br />and <br /><code>ui/src/todos/todos/CreateTodo.vue</code>
+                        <br /> elements.</span> <br /> <br />
 
-          <span>So, to use those elements here:</span>
-          <ol>
-            <li>Import the elements with: <br />
-              <code>
-                import AllTodos from './todos/todos/AllTodos.vue';
-                import CreateTodo from './todos/todos/CreateTodo.vue';
-              </code>
-            </li> <br /> <br />
-            <li>Add it into the subcomponents for the `App` component: <br />
-              <code>
-                TODO: write instructions
-              </code> <br /> <br />
-            </li>
-            <li>Replace this "EDIT ME!" section with <br />
-              <code>
-                    &lt;CreateTodo&gt;&lt;/CreateTodo&gt; <br />
-                    &lt;AllTodos&gt;&lt;/AllTodos&gt;
-              </code>.
-            </li>
-          </ol>
-        </div>
-      </div>
-      )
-      }
+                    <span>So, to use those elements here:</span>
+                    <ol>
+                        <li>Import the elements with: <br />
+                            <code>
+                                import AllTodos from './todos/todos/AllTodos.vue';
+                                import CreateTodo from './todos/todos/CreateTodo.vue';
+                            </code>
+                        </li> <br /> <br />
+                        <li>Add it into the subcomponents for the `App` component: <br />
+                            <code>
+                                TODO: write instructions
+                            </code> <br /> <br />
+                        </li>
+                        <li>Replace this "EDIT ME!" section with <br />
+                            <code>
+                                &lt;CreateTodo&gt;&lt;/CreateTodo&gt; <br />
+                                &lt;AllTodos&gt;&lt;/AllTodos&gt;
+                            </code>.
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        )
+}
 
-      export default App
+export default App
