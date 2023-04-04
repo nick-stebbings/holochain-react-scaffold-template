@@ -1,11 +1,11 @@
 import React, { useState, useContext, useRef } from 'react';
-import { AppAgentClient, Record, EntryHash, ActionHash } from '@holochain/client';
+import { Record, EntryHash, ActionHash } from '@holochain/client';
 import { ClientContext } from '../../../../../clientContext';
 import { decode } from '@msgpack/msgpack';
-import { serialize } from '@shoelace-style/shoelace/dist/utilities/form.js';
 
-import '@material/mwc-button';
+import type SlInputElement from '@shoelace-style/shoelace/dist/components/input/input';
 import { SlAlert, SlButton, SlIcon } from '@shoelace-style/shoelace/dist/react';
+
 {{#uniq_lines}}
   {{#each entry_type.fields}}
     {{#if widget}}
@@ -26,8 +26,10 @@ interface IEditEntryProps {
 
 const EditEntry = ({currentRecord, onEditCanceled, onEntryUpdated} : IEditEntryProps) => {
   const client = useContext(ClientContext);
-  const formRef = useRef(null);
-  const updateErrorRef = useRef(null);
+
+  const formRef = useRef<HTMLFormElement>(null);
+  const updateSuccessRef = useRef<typeof SlAlert>(null);
+  const updateErrorRef = useRef<typeof SlAlert>(null);
 
   const current{{pascal_case entry_type.name}} = decode((currentRecord.entry as any).Present.entry) as {{pascal_case entry_type.name}};
   const [{{snake_case entry_type.name}}, set{{pascal_case entry_type.name}}] = useState<{{pascal_case entry_type.name}}>(current{{pascal_case entry_type.name}});
@@ -51,12 +53,13 @@ const EditEntry = ({currentRecord, onEditCanceled, onEntryUpdated} : IEditEntryP
       });
       onEntryUpdated!(updateRecord.signed_action.hashed.hash);
     } catch (e: any) {
-      updateErrorRef.current.toast();
+      updateErrorRef!.show();
+      updateErrorRef!.current.toast();
     }
   };
 
-  const handleChange = async (e: any) => {
-    const value = e.target.value;
+  const handleChange = async (event: any) => {
+    const value = (event.target as SlInputElement).value;
 
     set{{pascal_case entry_type.name}}({
       ...{{snake_case entry_type.name}},
@@ -66,12 +69,21 @@ const EditEntry = ({currentRecord, onEditCanceled, onEntryUpdated} : IEditEntryP
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    const formData = serialize(formRef);
-    alert(formData);
+    const data = new FormData(formRef);
+
+    updateSuccessRef!.current.innerHTML = <p>{JSON.stringify(data, null, 2)}</p>;
+    updateSuccessRef!.current.show();
+    alert(Object.fromEntries(data.entries()));
   }
 
   return (
     <>
+      <SlAlert variant="success" ref={updateSuccessRef}>
+        <SlIcon slot="icon" name="check2-circle" />
+        <strong>Your changes have been saved</strong>
+        <br />
+        You can safely return now.
+      </SlAlert>
       <SlAlert variant="warning" ref={updateErrorRef}>
         <SlIcon slot="icon" name="exclamation-triangle" />
         <strong>Oh dear!</strong>
@@ -80,7 +92,7 @@ const EditEntry = ({currentRecord, onEditCanceled, onEntryUpdated} : IEditEntryP
       </SlAlert>
       <div>
         <span>Edit {{title_case entry_type.name}}</span>
-        <form ref={formRef} onSubmit={handleSubmit}>
+        <form ref={formRef} onSlSubmit={handleSubmit}>
           {{#uniq_lines}}
             {{#each entry_type.fields}}
               {{#if widget}}
@@ -90,17 +102,21 @@ const EditEntry = ({currentRecord, onEditCanceled, onEntryUpdated} : IEditEntryP
             {{/each}}
           {{/uniq_lines}}
           <div>
-            <mwc-button
-              outlined
-              label="Cancel"
+            <SlButton 
+              variant="neutral"
+              label="Save"
+              type="button"
+              outline
               onClick={onEditCanceled}
-            ></mwc-button>
-            <mwc-button
-              raised
+            >Cancel
+            </SlButton>
+            <SlButton 
+              variant="primary"
               label="Save"
               type="submit"
-              disabled={!is{{pascal_case entry_type.name}}Valid}
-            ></mwc-button>
+              disabled={!isTodoValid}
+            >Submit
+            </SlButton>
           </div>
         </form>
       </div>
