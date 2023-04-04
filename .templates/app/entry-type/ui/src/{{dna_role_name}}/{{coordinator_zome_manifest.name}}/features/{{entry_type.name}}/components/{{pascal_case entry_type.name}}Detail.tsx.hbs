@@ -1,153 +1,114 @@
-<template>
-  <div v-if="!loading">
-{{#if crud.update}}
-    <div v-if="editing" style="display: flex; flex: 1;">
-      <Edit{{pascal_case entry_type.name}}
-{{#if link_from_original_to_each_update}}
-        :original-{{kebab_case entry_type.name}}-hash="{{camel_case entry_type.name}}Hash"
-{{/if}}
-        :current-record="record!"
-        @{{kebab_case entry_type.name}}-updated="editing = false; fetch{{pascal_case entry_type.name}}();"
-        @edit-canceled="editing = false"
-      ></Edit{{pascal_case entry_type.name}}>
-    </div>
-{{/if}}
-    <div v-{{#if crud.update}}else-{{/if}}if="record" style="display: flex; flex-direction: column">
-      <div style="display: flex; flex-direction: row">
-        <span style="flex: 1"></span>
-      
-{{#if crud.update}}
-        <mwc-icon-button style="margin-left: 8px" icon="edit" @click="editing = true"></mwc-icon-button>
-{{/if}}
-{{#if crud.delete}}
-        <mwc-icon-button style="margin-left: 8px" icon="delete" @click="delete{{pascal_case entry_type.name}}()"></mwc-icon-button>
-{{/if}}
-      </div>
+import React, { useState, useContext, useRef } from 'react';
+import { Record, EntryHash, ActionHash } from '@holochain/client';
+import { ClientContext } from '../../../../../clientContext';
 
-{{#each entry_type.fields}}
-  {{#if widget}}	  
-    {{#if (not (eq cardinality "vector") )}}
-      <div style="display: flex; flex-direction: row; margin-bottom: 16px;">
-	<span style="margin-right: 4px"><strong>{{title_case field_name}}: </strong></span>
- 	<span style="white-space: pre-line">{{> (concat field_type.type "/" widget "/detail/render") variable_to_read=(concat (camel_case ../entry_type.name) "?." (snake_case field_name) ) }}</span>
-      </div>
-    {{else}}
-      {{> Vec/detail/render variable_to_read=(concat (camel_case ../entry_type.name) "?." (snake_case field_name) ) field_name=field_name field_type=field_type widget=widget }}
-    {{/if}}
-
-  {{/if}}
-{{/each}}
-    </div>
-    
-    <span v-else>The requested {{lower_case entry_type.name}} was not found.</span>
-  </div>
-
-  <div v-else style="display: flex; flex: 1; align-items: center; justify-content: center">
-    <mwc-circular-progress indeterminate></mwc-circular-progress>
-  </div>
-
-{{#if crud.delete}}
-  <mwc-snackbar ref="delete-error" leading>
-  </mwc-snackbar>
-{{/if}}
-</template>
-
-<script lang="ts">
-import { defineComponent, inject, ComputedRef } from 'vue';
-import { decode } from '@msgpack/msgpack';
-import { AppAgentClient, Record, AgentPubKey, EntryHash, ActionHash, DnaHash } from '@holochain/client';
-import { {{pascal_case entry_type.name}}{{#each entry_type.fields}}{{#if (eq field_type.type "Enum")}}, {{field_type.label}}{{/if}}{{/each}} } from './types';
-import '@material/mwc-circular-progress';
-import '@material/mwc-icon-button';
-import '@material/mwc-snackbar';
-import { Snackbar } from '@material/mwc-snackbar';
+import type SlInputElement from '@shoelace-style/shoelace/dist/components/input/input';
+import { SlAlert, SlButton, SlIcon } from '@shoelace-style/shoelace/dist/react';
 {{#uniq_lines}}
   {{#each entry_type.fields}}
     {{#if widget}}
-{{> (concat field_type.type "/" widget "/detail/imports") }}
-
+{{> (concat field_type.type "/" widget "/edit/imports") }};
     {{/if}}
   {{/each}}
 {{/uniq_lines}}
-{{#if crud.update}}
-import Edit{{pascal_case entry_type.name}} from './Edit{{pascal_case entry_type.name}}.vue';
-{{/if}}
 
-export default defineComponent({
-{{#if crud.update}}
-  components: {
-    Edit{{pascal_case entry_type.name}}
-  },
-{{/if}}
-  props: {
-    {{camel_case entry_type.name}}Hash: {
-      type: Object,
-      required: true
-    }
-  },
-  data(): { record: Record | undefined; loading: boolean; {{#if crud.update}}editing: boolean;{{/if}} } {
-    return {
-      record: undefined,
-      loading: true,
-{{#if crud.update}}
-      editing: false,
-{{/if}}
-    }
-  },
-  computed: {
-    {{camel_case entry_type.name}}() {
-      if (!this.record) return undefined;
-      return decode((this.record.entry as any).Present.entry) as {{pascal_case entry_type.name}};
-    }
-  },
-  async mounted() {
-    if (this.{{camel_case entry_type.name}}Hash === undefined) {
-      throw new Error(`The {{camel_case entry_type.name}}Hash input is required for the {{pascal_case entry_type.name}}Detail element`);
-    }
+import { {{pascal_case entry_type.name}}{{#each entry_type.fields}}{{#if (eq field_type.type "Enum")}}, {{field_type.label}}{{/if}}{{/each}} } from '../types';
 
-    await this.fetch{{pascal_case entry_type.name}}();
-  },
-  methods: {
-    async fetch{{pascal_case entry_type.name}}() {
-      this.loading = true;
-      this.record = undefined;
+interface I{{pascal_case entry_type.name}}DetailsProps {
+  onFetchCanceled?: () => void;
+  on{{pascal_case entry_type.name}}Fetchd?: (actionHash: ActionHash) => void;
+}
 
-      this.record = await this.client.callZome({
+const {{pascal_case entry_type.name}}Details = ({onFetchCanceled, on{{pascal_case entry_type.name}}Fetchd} : I{{pascal_case entry_type.name}}DetailsProps) => {
+  const client = useContext(ClientContext);
+
+  const formRef = useRef<HTMLFormElement>(null);
+  const fetchSuccessRef = useRef<typeof SlAlert>(undefined);
+  const fetchErrorRef = useRef<typeof SlAlert>(undefined);
+  const current{{pascal_case entry_type.name}}: {{pascal_case entry_type.name}} = { {{#each entry_type.fields}}
+          {{#if (eq cardinality "single") }}
+          {{snake_case field_name}}:{{#if widget}}{{> (concat field_type.type "/" widget "/initial-value") }}{{/if}},
+          {{else}}
+          {{snake_case field_name}}: this.{{camel_case field_name}}{{#if (eq cardinality "vector") }} as Array<{{> (concat field_type.type "/type") }}>{{/if}},
+          {{/if}}
+    {{/each}}
+
+  const [{{snake_case entry_type.name}}, set{{pascal_case entry_type.name}}] = useState<{{pascal_case entry_type.name}}>(current{{pascal_case entry_type.name}});
+
+  const is{{pascal_case entry_type.name}}Valid = () => {
+      return true{{#each entry_type.fields}}{{#if widget}}{{#if (eq cardinality "single")}} && {{> (concat field_type.type "/" widget "/is-valid") variable_to_validate=(concat "{{snake_case entry_type.name}}." (camel_case field_name)) }}{{/if}}{{#if (eq cardinality "vector")}} && {{snake_case entry_type.name}}.{{camel_case field_name}}.every(e => {{> (concat field_type.type "/" widget "/is-valid") variable_to_validate="e" }}){{/if}}{{/if}}{{/each}};
+    };
+
+  const fetch{{pascal_case entry_type.name}} = async () => {
+    try {
+      setLoading(true);
+      const maybeRecord: Record = await client!.callZome({
         cap_secret: null,
         role_name: '{{dna_role_name}}',
         zome_name: '{{coordinator_zome_manifest.name}}',
         fn_name: 'get_{{snake_case entry_type.name}}',
-        payload: this.{{camel_case entry_type.name}}Hash,
+        payload: {{pascal_case entry_type.name}}Hash
       });
-
-      this.loading = false;
-    },
-{{#if crud.delete}}    
-    async delete{{pascal_case entry_type.name}}() {
-      try {
-        await this.client.callZome({
-          cap_secret: null,
-          role_name: '{{dna_role_name}}',
-          zome_name: '{{coordinator_zome_manifest.name}}',
-          fn_name: 'delete_{{snake_case entry_type.name}}',
-          payload: this.{{camel_case entry_type.name}}Hash,
-        });
-        this.$emit('{{kebab_case entry_type.name}}-deleted', this.{{camel_case entry_type.name}}Hash);
-        this.fetch{{pascal_case entry_type.name}}();
-      } catch (e: any) {
-        const errorSnackbar = this.$refs['delete-error'] as Snackbar;
-        errorSnackbar.labelText = `Error deleting the {{lower_case entry_type.name}}: ${e.data.data}`;
-        errorSnackbar.show();
-      }
+      setRecord(maybeRecord)
+      setLoading(false);
+    } catch (e: any) {
+      fetchErrorRef!.current.show();
+      fetchErrorRef!.current.toast();
     }
-{{/if}}
-  },
-  emits: ['{{kebab_case entry_type.name}}-deleted'],
-  setup() {
-    const client = (inject('client') as ComputedRef<AppAgentClient>).value;
-    return {
-      client
-    };
-  },
-})
-</script>
+  };
+
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+
+    await fetch{{pascal_case entry_type.name}}();
+  }
+
+  return (
+    <>
+      <SlAlert variant="success" ref={fetchSuccessRef}>
+        <SlIcon slot="icon" name="check2-circle" />
+        <strong>Your new record has been saved</strong>
+        <br />
+        You can safely return now.
+      </SlAlert>
+      <SlAlert variant="warning" ref={fetchErrorRef}>
+        <SlIcon slot="icon" name="exclamation-triangle" />
+        <strong>Oh dear!</strong>
+        <br />
+          There was an error creating your record
+      </SlAlert>
+      <div>
+        <span>Fetch {{title_case entry_type.name}}</span>
+        <form ref={formRef} onSubmit={handleSubmit}>
+          {{#uniq_lines}}
+            {{#each entry_type.fields}}
+              {{#if widget}}
+          {{> (concat field_type.type "/" widget "/edit/render") field_name=field_name entry_name=(snake_case ../entry_type.name)}}
+
+              {{/if}}
+            {{/each}}
+          {{/uniq_lines}}
+          <div>
+            <SlButton 
+              variant="neutral"
+              label="Cancel"
+              type="button"
+              outline
+              onClick={onFetchCanceled}
+            >Cancel
+            </SlButton>
+            <SlButton 
+              variant="primary"
+              label="Save"
+              type="submit"
+              disabled={!isTodoValid}
+            >Submit
+            </SlButton>
+          </div>
+        </form>
+      </div>
+    </>
+  );
+};
+
+export default {{pascal_case entry_type.name}}Details;

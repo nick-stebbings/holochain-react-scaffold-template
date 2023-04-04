@@ -67,7 +67,7 @@ const Create{{pascal_case entry_type.name}} = ({onCreateCanceled, on{{pascal_cas
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
-    await createTodo();
+    await create{{pascal_case entry_type.name}}();
   }
 
   return (
@@ -108,7 +108,7 @@ const Create{{pascal_case entry_type.name}} = ({onCreateCanceled, on{{pascal_cas
               variant="primary"
               label="Save"
               type="submit"
-              disabled={!isTodoValid}
+              disabled={!is{{pascal_case entry_type.name}}Valid}
             >Submit
             </SlButton>
           </div>
