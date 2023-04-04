@@ -32,11 +32,12 @@ const Create{{pascal_case entry_type.name}} = ({onCreateCanceled, on{{pascal_cas
           {{snake_case field_name}}: this.{{camel_case field_name}}{{#if (eq cardinality "vector") }} as Array<{{> (concat field_type.type "/type") }}>{{/if}},
           {{/if}}
     {{/each}}
+  };
 
   const [{{snake_case entry_type.name}}, set{{pascal_case entry_type.name}}] = useState<{{pascal_case entry_type.name}}>(current{{pascal_case entry_type.name}});
 
   const is{{pascal_case entry_type.name}}Valid = () => {
-      return true{{#each entry_type.fields}}{{#if widget}}{{#if (eq cardinality "single")}} && {{> (concat field_type.type "/" widget "/is-valid") variable_to_validate=(concat "{{snake_case entry_type.name}}." (camel_case field_name)) }}{{/if}}{{#if (eq cardinality "vector")}} && {{snake_case entry_type.name}}.{{camel_case field_name}}.every(e => {{> (concat field_type.type "/" widget "/is-valid") variable_to_validate="e" }}){{/if}}{{/if}}{{/each}};
+      return true{{#each entry_type.fields}}{{#if widget}}{{#if (eq cardinality "single")}} && {{> (concat field_type.type "/" widget "/is-valid") variable_to_validate=(concat (snake_case ../entry_type.name) "." (camel_case field_name)) }}{{/if}}{{#if (eq cardinality "vector")}} && {{snake_case ../entry_type.name}}.{{camel_case field_name}}.every(e => {{> (concat field_type.type "/" widget "/is-valid") variable_to_validate="e" }}){{/if}}{{/if}}{{/each}};
     };
 
   const create{{pascal_case entry_type.name}} = async () => {
