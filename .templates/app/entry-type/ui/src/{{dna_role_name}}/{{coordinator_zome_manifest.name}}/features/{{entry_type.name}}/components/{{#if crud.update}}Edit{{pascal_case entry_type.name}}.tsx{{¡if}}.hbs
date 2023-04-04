@@ -17,7 +17,7 @@ import { {{pascal_case entry_type.name}}{{#each entry_type.fields}}{{#if (eq fie
 
 interface IEdit{{pascal_case entry_type.name}}Props {
   currentRecord: Record;
-  original{{pascal_case entry_type.name}}Hash: EntryHash;
+  original{{pascal_case entry_type.name}}Hash: ActionHash;
   onEditCanceled?: () => void;
   on{{pascal_case entry_type.name}}Updated?: (actionHash: ActionHash) => void;
 }
@@ -26,8 +26,8 @@ const Edit{{pascal_case entry_type.name}} = ({currentRecord, onEditCanceled, on{
   const client = useContext(ClientContext);
 
   const formRef = useRef<HTMLFormElement>(null);
-  const updateSuccessRef = useRef<typeof SlAlert>(undefined);
-  const updateErrorRef = useRef<typeof SlAlert>(undefined);
+  const updateSuccessRef = useRef<any>(null);
+  const updateErrorRef = useRef<any>(null);
 
   const current{{pascal_case entry_type.name}} = decode((currentRecord.entry as any).Present.entry) as {{pascal_case entry_type.name}};
   const [{{snake_case entry_type.name}}, set{{pascal_case entry_type.name}}] = useState<{{pascal_case entry_type.name}}>(current{{pascal_case entry_type.name}});
@@ -53,8 +53,7 @@ const Edit{{pascal_case entry_type.name}} = ({currentRecord, onEditCanceled, on{
       });
       !!on{{pascal_case entry_type.name}}Updated && on{{pascal_case entry_type.name}}Updated!(updateRecord.signed_action.hashed.hash);
     } catch (e: any) {
-      updateErrorRef!.current.show();
-      updateErrorRef!.current.toast();
+      updateErrorRef?.current.toast();
     }
   };
 
@@ -101,7 +100,6 @@ const Edit{{pascal_case entry_type.name}} = ({currentRecord, onEditCanceled, on{
           <div>
             <SlButton 
               variant="neutral"
-              label="Cancel"
               type="button"
               outline
               onClick={onEditCanceled}
@@ -109,7 +107,6 @@ const Edit{{pascal_case entry_type.name}} = ({currentRecord, onEditCanceled, on{
             </SlButton>
             <SlButton 
               variant="primary"
-              label="Save"
               type="submit"
               disabled={!is{{pascal_case entry_type.name}}Valid}
             >Submit

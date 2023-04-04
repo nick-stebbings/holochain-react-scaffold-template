@@ -1,9 +1,9 @@
-import React, { useState, useContext, useRef } from 'react';
+import React, { useState, useContext, useRef, useEffect } from 'react';
 import { Record, EntryHash, ActionHash } from '@holochain/client';
 import { ClientContext } from '../../../../../clientContext';
 import { decode } from '@msgpack/msgpack';
 
-import { SlAlert, SlButton, SlIcon } from '@shoelace-style/shoelace/dist/react';
+import { SlAlert, SlButton, SlIcon, SlSpinner } from '@shoelace-style/shoelace/dist/react';
 
 import Edit{{pascal_case entry_type.name}} from './Edit{{pascal_case entry_type.name}}';
 import { {{pascal_case entry_type.name}}{{#each entry_type.fields}}{{#if (eq field_type.type "Enum")}}, {{field_type.label}}{{/if}}{{/each}} } from '../types';
@@ -19,27 +19,37 @@ const {{pascal_case entry_type.name}}Details = ({ {{snake_case entry_type.name}}
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
 
-  const deleteSuccessRef = useRef<typeof SlAlert>(undefined);
-  const deleteErrorRef = useRef<typeof SlAlert>(undefined);
+  const deleteSuccessRef = useRef<any>(null);
+  const deleteErrorRef = useRef<any>(null);
 
   const [record, setRecord] = useState<Record>();
+  const [{{snake_case entry_type.name}}, set{{pascal_case entry_type.name}}] = useState<{{pascal_case entry_type.name}}>();
+
+  useEffect(() => {
+    fetch{{pascal_case entry_type.name}}()
+  } ,[])
 
   const is{{pascal_case entry_type.name}}Valid = () => {
-      return true{{#each entry_type.fields}}{{#if widget}}{{#if (eq cardinality "single")}} && {{> (concat field_type.type "/" widget "/is-valid") variable_to_validate=(concat "{{snake_case entry_type.name}}." (camel_case field_name)) }}{{/if}}{{#if (eq cardinality "vector")}} && {{snake_case entry_type.name}}.{{camel_case field_name}}.every(e => {{> (concat field_type.type "/" widget "/is-valid") variable_to_validate="e" }}){{/if}}{{/if}}{{/each}};
-    };
+      return true{{#each entry_type.fields}}{{#if widget}}{{#if (eq cardinality "single")}} && {{> (concat field_type.type "/" widget "/is-valid") variable_to_validate=(concat (snake_case ../entry_type.name) "." (camel_case field_name)) }}{{/if}}{{#if (eq cardinality "vector")}} && {{snake_case ../entry_type.name}}.{{camel_case field_name}}.every(e => {{> (concat field_type.type "/" widget "/is-valid") variable_to_validate="e" }}){{/if}}{{/if}}{{/each}};
+  };
 
   const fetch{{pascal_case entry_type.name}} = async () => {
     setLoading(true);
 
-    const maybeRecord: Record = await client!.callZome({
-      cap_secret: null,
-      role_name: '{{dna_role_name}}',
-      zome_name: '{{coordinator_zome_manifest.name}}',
-      fn_name: 'get_{{snake_case entry_type.name}}',
-      payload: {{snake_case entry_type.name}}Hash
-    });
+    try {
+      const maybeRecord: Record = await client!.callZome({
+        cap_secret: null,
+        role_name: '{{dna_role_name}}',
+        zome_name: '{{coordinator_zome_manifest.name}}',
+        fn_name: 'get_{{snake_case entry_type.name}}',
+        payload: {{snake_case entry_type.name}}Hash
+      });
 
-    setRecord(maybeRecord);
+      setRecord(maybeRecord);
+      set{{pascal_case entry_type.name}}(decode((record.entry as any).Present.entry) as {{pascal_case entry_type.name}})
+    } catch (e: any) {
+      
+    }
     setLoading(false);
   };
   const delete{{pascal_case entry_type.name}} = async () => {
@@ -52,15 +62,16 @@ const {{pascal_case entry_type.name}}Details = ({ {{snake_case entry_type.name}}
         fn_name: 'delete_{{snake_case entry_type.name}}',
         payload: {{snake_case entry_type.name}}Hash
       });
-      setRecord(undefined);
+      setRecord();
       await fetch{{pascal_case entry_type.name}}();
 
       on{{pascal_case entry_type.name}}Deleted && on{{pascal_case entry_type.name}}Deleted!();
     } catch (e: any) {
-      deleteErrorRef!.current.show();
-      deleteErrorRef!.current.toast();
+      deleteErrorRef?.current.toast();
     }
   };
+
+  loading && return <SlSpinner></SlSpinner>;
 
   return !record ? <p>No record found</p> : (
     <>
@@ -80,13 +91,23 @@ const {{pascal_case entry_type.name}}Details = ({ {{snake_case entry_type.name}}
       { editing
         ? <Edit{{pascal_case entry_type.name}}
             currentRecord={record}
-            originalTodoHash={(record.signed_action.hashed.hash) as EntryHash}
+            original{{pascal_case entry_type.name}}Hash={(record.signed_action.hashed.hash) as ActionHash}
             
             on{{pascal_case entry_type.name}}Updated={ () => { setEditing(false); fetch{{pascal_case entry_type.name}}() } }
           />
         : <div>
             <span>Your {{title_case entry_type.name}}</span>
+            {
+              Object.keys(todo)
+            }
           </div>
+          <SlButton 
+            variant="danger"
+            type="button"
+            outline
+            onClick={ delete{{pascal_case entry_type.name}} }
+          >Delete
+          </SlButton>
       }
     </>
   );

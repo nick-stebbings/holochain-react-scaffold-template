@@ -1,5 +1,5 @@
 import React, { useState, useContext, useRef } from 'react';
-import { Record, EntryHash, ActionHash } from '@holochain/client';
+import { Record } from '@holochain/client';
 import { ClientContext } from '../../../../../clientContext';
 
 import type SlInputElement from '@shoelace-style/shoelace/dist/components/input/input';
@@ -16,7 +16,7 @@ import { {{pascal_case entry_type.name}}{{#each entry_type.fields}}{{#if (eq fie
 
 interface ICreate{{pascal_case entry_type.name}}Props {
   onCreateCanceled?: () => void;
-  on{{pascal_case entry_type.name}}Created?: (actionHash: ActionHash) => void;
+  on{{pascal_case entry_type.name}}Created?: (actionHash: Uint8Array) => void;
 }
 
 const Create{{pascal_case entry_type.name}} = ({onCreateCanceled, on{{pascal_case entry_type.name}}Created} : ICreate{{pascal_case entry_type.name}}Props) => {
@@ -38,7 +38,7 @@ const Create{{pascal_case entry_type.name}} = ({onCreateCanceled, on{{pascal_cas
 
   const is{{pascal_case entry_type.name}}Valid = () => {
       return true{{#each entry_type.fields}}{{#if widget}}{{#if (eq cardinality "single")}} && {{> (concat field_type.type "/" widget "/is-valid") variable_to_validate=(concat (snake_case ../entry_type.name) "." (camel_case field_name)) }}{{/if}}{{#if (eq cardinality "vector")}} && {{snake_case ../entry_type.name}}.{{camel_case field_name}}.every(e => {{> (concat field_type.type "/" widget "/is-valid") variable_to_validate="e" }}){{/if}}{{/if}}{{/each}};
-    };
+  };
 
   const create{{pascal_case entry_type.name}} = async () => {
     try {
@@ -99,7 +99,6 @@ const Create{{pascal_case entry_type.name}} = ({onCreateCanceled, on{{pascal_cas
           <div>
             <SlButton 
               variant="neutral"
-              label="Cancel"
               type="button"
               outline
               onClick={onCreateCanceled}
@@ -107,7 +106,6 @@ const Create{{pascal_case entry_type.name}} = ({onCreateCanceled, on{{pascal_cas
             </SlButton>
             <SlButton 
               variant="primary"
-              label="Save"
               type="submit"
               disabled={!is{{pascal_case entry_type.name}}Valid}
             >Submit
