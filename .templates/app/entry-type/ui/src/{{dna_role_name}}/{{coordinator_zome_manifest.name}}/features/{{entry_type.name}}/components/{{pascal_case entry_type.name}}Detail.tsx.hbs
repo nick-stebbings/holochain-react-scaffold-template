@@ -3,15 +3,7 @@ import { Record, EntryHash, ActionHash } from '@holochain/client';
 import { ClientContext } from '../../../../../clientContext';
 import { decode } from '@msgpack/msgpack';
 
-import type SlInputElement from '@shoelace-style/shoelace/dist/components/input/input';
 import { SlAlert, SlButton, SlIcon } from '@shoelace-style/shoelace/dist/react';
-{{#uniq_lines}}
-  {{#each entry_type.fields}}
-    {{#if widget}}
-{{> (concat field_type.type "/" widget "/edit/imports") }};
-    {{/if}}
-  {{/each}}
-{{/uniq_lines}}
 
 import Edit{{pascal_case entry_type.name}} from './Edit{{pascal_case entry_type.name}}';
 import { {{pascal_case entry_type.name}}{{#each entry_type.fields}}{{#if (eq field_type.type "Enum")}}, {{field_type.label}}{{/if}}{{/each}} } from '../types';
@@ -60,7 +52,7 @@ const {{pascal_case entry_type.name}}Details = ({ {{snake_case entry_type.name}}
         fn_name: 'delete_{{snake_case entry_type.name}}',
         payload: {{snake_case entry_type.name}}Hash
       });
-      setRecord(decode((maybeRecord.entry as any).Present.entry) as {{pascal_case entry_type.name}});
+      setRecord(undefined);
       await fetch{{pascal_case entry_type.name}}();
 
       on{{pascal_case entry_type.name}}Deleted && on{{pascal_case entry_type.name}}Deleted!();
@@ -88,8 +80,8 @@ const {{pascal_case entry_type.name}}Details = ({ {{snake_case entry_type.name}}
       { editing
         ? <Edit{{pascal_case entry_type.name}}
             currentRecord={record}
-            original{{pascal_case entry_type.name}}Hash={"abc"}
-            onEditCancelled={ () => { setEditing(false) } }
+            originalTodoHash={(record.signed_action.hashed.hash) as EntryHash}
+            
             on{{pascal_case entry_type.name}}Updated={ () => { setEditing(false); fetch{{pascal_case entry_type.name}}() } }
           />
         : <div>
