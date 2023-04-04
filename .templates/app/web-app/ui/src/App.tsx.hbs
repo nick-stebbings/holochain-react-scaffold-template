@@ -4,16 +4,7 @@ import { ClientContext } from './clientContext';
 
 import './style.css'
 
-import '@material/mwc-circular-progress';
-import { CircularProgressBase } from '@material/mwc-circular-progress/mwc-circular-progress-base';
-
-declare global {
-    namespace JSX {
-        interface IntrinsicElements {
-            'mwc-circular-progress': Partial<CircularProgressBase>
-        }
-    }
-}
+import { SlSpinner } from '@shoelace-style/shoelace/dist/react';
 
 function App() {
     const [loading, setLoading] = useState(true);
@@ -31,7 +22,7 @@ function App() {
     }, []);
 
     return loading
-        ? (<mwc-circular-progress indeterminate></mwc-circular-progress>)
+        ? (<SlSpinner></SlSpinner>)
         : (
             <ClientContext.Provider value={client}>
                 <div className="App">
