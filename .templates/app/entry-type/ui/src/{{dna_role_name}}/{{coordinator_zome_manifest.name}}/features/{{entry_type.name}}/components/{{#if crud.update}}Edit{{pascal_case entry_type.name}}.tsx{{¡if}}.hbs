@@ -15,14 +15,14 @@ import { SlAlert, SlButton, SlIcon } from '@shoelace-style/shoelace/dist/react';
 
 import { {{pascal_case entry_type.name}}{{#each entry_type.fields}}{{#if (eq field_type.type "Enum")}}, {{field_type.label}}{{/if}}{{/each}} } from '../types';
 
-interface IEditEntryProps {
+interface IEdit{{pascal_case entry_type.name}}Props {
   currentRecord: Record;
   original{{pascal_case entry_type.name}}Hash: EntryHash;
   onEditCanceled?: () => void;
-  onEntryUpdated?: (actionHash: ActionHash) => void;
+  on{{pascal_case entry_type.name}}Updated?: (actionHash: ActionHash) => void;
 }
 
-const EditEntry = ({currentRecord, onEditCanceled, onEntryUpdated} : IEditEntryProps) => {
+const Edit{{pascal_case entry_type.name}} = ({currentRecord, onEditCanceled, on{{pascal_case entry_type.name}}Updated} : IEdit{{pascal_case entry_type.name}}Props) => {
   const client = useContext(ClientContext);
 
   const formRef = useRef<HTMLFormElement>(null);
@@ -51,7 +51,7 @@ const EditEntry = ({currentRecord, onEditCanceled, onEntryUpdated} : IEditEntryP
           updated_{{snake_case entry_type.name}}: {{camel_case entry_type.name}}
         }
       });
-      onEntryUpdated!(updateRecord.signed_action.hashed.hash);
+      !!on{{pascal_case entry_type.name}}Updated && on{{pascal_case entry_type.name}}Updated!(updateRecord.signed_action.hashed.hash);
     } catch (e: any) {
       updateErrorRef!.current.show();
       updateErrorRef!.current.toast();
@@ -69,11 +69,8 @@ const EditEntry = ({currentRecord, onEditCanceled, onEntryUpdated} : IEditEntryP
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    const data = new FormData((formRef as any)!.current);
 
-    updateSuccessRef!.current.innerHTML = <p>{JSON.stringify(data, null, 2)}</p>;
-    updateSuccessRef!.current.show();
-    alert(Object.fromEntries(data.entries()));
+    await updateTodo();
   }
 
   return (
@@ -104,7 +101,7 @@ const EditEntry = ({currentRecord, onEditCanceled, onEntryUpdated} : IEditEntryP
           <div>
             <SlButton 
               variant="neutral"
-              label="Save"
+              label="Cancel"
               type="button"
               outline
               onClick={onEditCanceled}
@@ -124,4 +121,4 @@ const EditEntry = ({currentRecord, onEditCanceled, onEntryUpdated} : IEditEntryP
   );
 };
 
-export default EditEntry;
+export default Edit{{pascal_case entry_type.name}};
