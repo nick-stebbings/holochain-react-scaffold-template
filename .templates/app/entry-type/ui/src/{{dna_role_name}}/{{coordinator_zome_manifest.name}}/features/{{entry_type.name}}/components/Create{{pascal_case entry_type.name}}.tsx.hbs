@@ -1,7 +1,6 @@
 import React, { useState, useContext, useRef } from 'react';
 import { Record, EntryHash, ActionHash } from '@holochain/client';
 import { ClientContext } from '../../../../../clientContext';
-import { ClientContext } from '../../../../../clientContext';
 
 import type SlInputElement from '@shoelace-style/shoelace/dist/components/input/input';
 import { SlAlert, SlButton, SlIcon } from '@shoelace-style/shoelace/dist/react';
@@ -20,22 +19,20 @@ interface ICreate{{pascal_case entry_type.name}}Props {
   on{{pascal_case entry_type.name}}Created?: (actionHash: ActionHash) => void;
 }
 
-const Create{{pascal_case entry_type.name}} = ({currentRecord, onCreateCanceled, on{{pascal_case entry_type.name}}Created} : ICreate{{pascal_case entry_type.name}}Props) => {
+const Create{{pascal_case entry_type.name}} = ({onCreateCanceled, on{{pascal_case entry_type.name}}Created} : ICreate{{pascal_case entry_type.name}}Props) => {
   const client = useContext(ClientContext);
 
   const formRef = useRef<HTMLFormElement>(null);
   const createSuccessRef = useRef<typeof SlAlert>(undefined);
   const createErrorRef = useRef<typeof SlAlert>(undefined);
+  const current{{pascal_case entry_type.name}}: {{pascal_case entry_type.name}} = { {{#each entry_type.fields}}
+          {{#if (eq cardinality "single") }}
+          {{snake_case field_name}}:{{#if widget}}{{> (concat field_type.type "/" widget "/initial-value") }}{{/if}},
+          {{else}}
+          {{snake_case field_name}}: this.{{camel_case field_name}}{{#if (eq cardinality "vector") }} as Array<{{> (concat field_type.type "/type") }}>{{/if}},
+          {{/if}}
+    {{/each}}
 
-  const current{{pascal_case entry_type.name}} = {{#each entry_type.fields}}
-  {{#if widget}}
-    {{#if (not (eq cardinality "vector" ) )}}
-    {{camel_case field_name}}: {{> (concat field_type.type "/type")}}{{#if (eq cardinality "option")}}| undefined{{/if}};
-    {{else}}
-    {{camel_case field_name}}: Array<{{> (concat field_type.type "/type")}}>;
-    {{/if}}
-  {{/if}}
-{{/each}} as {{pascal_case entry_type.name}};
   const [{{snake_case entry_type.name}}, set{{pascal_case entry_type.name}}] = useState<{{pascal_case entry_type.name}}>(current{{pascal_case entry_type.name}});
 
   const is{{pascal_case entry_type.name}}Valid = () => {
