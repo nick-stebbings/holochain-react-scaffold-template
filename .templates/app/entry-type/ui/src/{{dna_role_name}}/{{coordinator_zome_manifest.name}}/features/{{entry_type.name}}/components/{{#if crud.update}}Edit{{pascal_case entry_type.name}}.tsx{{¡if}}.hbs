@@ -8,7 +8,7 @@ import { SlAlert, SlButton, SlIcon } from '@shoelace-style/shoelace/dist/react';
 {{#uniq_lines}}
   {{#each entry_type.fields}}
     {{#if widget}}
-{{> (concat field_type.type "/" widget "/edit/imports"); }}
+{{> (concat field_type.type "/" widget "/edit/imports") }};
     {{/if}}
   {{/each}}
 {{/uniq_lines}}
