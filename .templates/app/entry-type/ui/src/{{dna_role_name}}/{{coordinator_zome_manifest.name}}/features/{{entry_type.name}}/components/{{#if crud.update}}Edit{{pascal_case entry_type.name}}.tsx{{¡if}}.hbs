@@ -5,12 +5,10 @@ import { decode } from '@msgpack/msgpack';
 
 import type SlInputElement from '@shoelace-style/shoelace/dist/components/input/input';
 import { SlAlert, SlButton, SlIcon } from '@shoelace-style/shoelace/dist/react';
-
 {{#uniq_lines}}
   {{#each entry_type.fields}}
     {{#if widget}}
-{{> (concat field_type.type "/" widget "/edit/imports") }}
-
+{{> (concat field_type.type "/" widget "/edit/imports"); }}
     {{/if}}
   {{/each}}
 {{/uniq_lines}}
@@ -28,13 +26,15 @@ const EditEntry = ({currentRecord, onEditCanceled, onEntryUpdated} : IEditEntryP
   const client = useContext(ClientContext);
 
   const formRef = useRef<HTMLFormElement>(null);
-  const updateSuccessRef = useRef<typeof SlAlert>(null);
-  const updateErrorRef = useRef<typeof SlAlert>(null);
+  const updateSuccessRef = useRef<typeof SlAlert>(undefined);
+  const updateErrorRef = useRef<typeof SlAlert>(undefined);
 
   const current{{pascal_case entry_type.name}} = decode((currentRecord.entry as any).Present.entry) as {{pascal_case entry_type.name}};
   const [{{snake_case entry_type.name}}, set{{pascal_case entry_type.name}}] = useState<{{pascal_case entry_type.name}}>(current{{pascal_case entry_type.name}});
 
-  const is{{pascal_case entry_type.name}}Valid = true;
+  const is{{pascal_case entry_type.name}}Valid = () => {
+      return true{{#each entry_type.fields}}{{#if widget}}{{#if (eq cardinality "single")}} && {{> (concat field_type.type "/" widget "/is-valid") variable_to_validate=(concat "this." (camel_case field_name)) }}{{/if}}{{#if (eq cardinality "vector")}} && this.{{camel_case field_name}}.every(e => {{> (concat field_type.type "/" widget "/is-valid") variable_to_validate="e" }}){{/if}}{{/if}}{{/each}};
+    };
 
   const update{{pascal_case entry_type.name}} = async () => {
     try {
@@ -53,7 +53,7 @@ const EditEntry = ({currentRecord, onEditCanceled, onEntryUpdated} : IEditEntryP
       });
       onEntryUpdated!(updateRecord.signed_action.hashed.hash);
     } catch (e: any) {
-      updateErrorRef!.show();
+      updateErrorRef!.current.show();
       updateErrorRef!.current.toast();
     }
   };
@@ -63,13 +63,13 @@ const EditEntry = ({currentRecord, onEditCanceled, onEntryUpdated} : IEditEntryP
 
     set{{pascal_case entry_type.name}}({
       ...{{snake_case entry_type.name}},
-      [e.target.name]: value
+      [event.target.name]: value
     });
   }
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    const data = new FormData(formRef);
+    const data = new FormData((formRef as any)!.current);
 
     updateSuccessRef!.current.innerHTML = <p>{JSON.stringify(data, null, 2)}</p>;
     updateSuccessRef!.current.show();
