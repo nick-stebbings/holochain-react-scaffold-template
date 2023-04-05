@@ -1,0 +1,37 @@
+import React, { useState, useEffect } from 'react'
+import { AppAgentClient, AppAgentWebsocket } from '@holochain/client';
+import { ClientContext } from './clientContext';
+
+import './style.css'
+
+import { SlSpinner } from '@shoelace-style/shoelace/dist/react';
+
+function App() {
+    const [loading, setLoading] = useState(true);
+    const [hash, setHash] = useState<ActionHashB64>();
+    const [client, setClient] = useState<AppAgentWebsocket>();
+
+    useEffect(() => {
+        async function initClient() {
+            // We pass '' as url because it will dynamically be replaced in launcher environments
+            setClient(await AppAgentWebsocket.connect('', 'forum'));
+
+            setLoading(false)
+        }
+        initClient();
+    }, []);
+
+    return loading
+        ? (<SlSpinner></SlSpinner>)
+        : (
+            <ClientContext.Provider value={client}>
+                <div className="App">
+                    <h1>Holochain + React</h1>
+                    <CreateTodo onTodoCreated={(ah: any) => {setHash(encodeHashToBase64(ah) as ActionHashB64)}}></CreateTodo>            
+                    { hash && <TodoDetails todoHash={hash} ></TodoDetails>}
+                </div>
+            </ClientContext.Provider>
+          )
+}
+
+export default App
