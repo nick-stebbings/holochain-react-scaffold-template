@@ -1,29 +1,29 @@
 import React, { useState, useContext, useRef, useEffect } from 'react';
-import { Record, EntryHash, ActionHash } from '@holochain/client';
+import { Record, ActionHashB64, encodeHashToBase64 } from '@holochain/client';
 import { ClientContext } from '../../../../../clientContext';
-import { decode } from '@msgpack/msgpack';
 
-import { SlAlert, SlButton, SlIcon, SlSpinner } from '@shoelace-style/shoelace/dist/react';
+import { SlAlert, SlIcon, SlSpinner } from '@shoelace-style/shoelace/dist/react';
 
-import {{pascal_case referenceable.name}}Detail from '{{pascal_case referenceable.name}}Detail';
+import {{pascal_case referenceable.name}}Details from './{{pascal_case referenceable.name}}Detail';
 import { {{pascal_case referenceable.name}}{{#each entry_type.fields}}{{#if (eq field_type.type "Enum")}}, {{field_type.label}}{{/if}}{{/each}} } from '../types';
+import { {{pascal_case referenceable.name}}sSignal } from '../../../types';
 
 const All{{pascal_case referenceable.name}}s = () => {
   const client = useContext(ClientContext);
   const [loading, setLoading] = useState(true);
-  const [hashes, setHashes] = useState<Array<ActionHash>>();
+  const [hashes, setHashes] = useState<Array<ActionHashB64>>();
 
   const fetchErrorRef = useRef<any>(null);
 
-  useEffect(async () => {
-    await fetch{{pascal_case referenceable.name}}s();
-    client.on('signal', (signal : any) => {
+  useEffect(() => {
+    fetch{{pascal_case referenceable.name}}s();
+    {{!-- client.on('signal', (signal : any) => {
       if (signal.zome_name !== '{{snake_case referenceable.name}}s') return; 
       const payload = signal.payload as {{pascal_case referenceable.name}}sSignal;
       if (payload.type !== 'EntryCreated') return;
       if (payload.app_entry.type !== '{{pascal_case referenceable.name}}') return;
       if (hashes) setHashes([...hashes, payload.action.hashed.hash]);
-    });
+    }); --}}
   } ,[])
 
   const fetch{{pascal_case referenceable.name}}s = async () => {
@@ -38,7 +38,7 @@ const All{{pascal_case referenceable.name}}s = () => {
         payload: null
       });
 
-      setHashes(maybeRecords.map(r => r.signed_action.hashed.hash));
+      setHashes(maybeRecords.map(r => encodeHashToBase64(r.signed_action.hashed.hash) as ActionHashB64));
     } catch (e: any) {
       fetchErrorRef?.current.toast();
     }
@@ -55,9 +55,9 @@ const All{{pascal_case referenceable.name}}s = () => {
           There was an error fetching your records
       </SlAlert>
       {
-        hashes.map((ah: ActionHash, i: number) => {
+        hashes.map((ah: ActionHashB64, i: number) => 
           <{{pascal_case referenceable.name}}Details {{snake_case referenceable.name}}Hash={ah} on{{pascal_case referenceable.name}}Deleted={fetch{{pascal_case referenceable.name}}s} key={i} />
-        })
+        )
       }
     </>
   );
