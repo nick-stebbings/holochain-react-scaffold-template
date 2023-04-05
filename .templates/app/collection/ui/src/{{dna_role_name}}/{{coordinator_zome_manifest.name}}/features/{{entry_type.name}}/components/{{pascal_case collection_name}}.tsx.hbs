@@ -5,7 +5,7 @@ import { decode } from '@msgpack/msgpack';
 
 import { SlAlert, SlButton, SlIcon, SlSpinner } from '@shoelace-style/shoelace/dist/react';
 
-import {{pascal_case entry_type.name}}Detail from './{{pascal_case entry_type.name}}Detail';
+import TodoDetail from './TodoDetail';
 import { {{pascal_case entry_type.name}}{{#each entry_type.fields}}{{#if (eq field_type.type "Enum")}}, {{field_type.label}}{{/if}}{{/each}} } from '../types';
 
 const All{{pascal_case entry_type.name}}s = () => {
