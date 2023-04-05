@@ -1,5 +1,2 @@
-<SlSelect label="{{label}}" name="{{field_name}}" value={ {{~entry_name}}.{{field_name~}} } onSlChange={handleChange}{{#if required}} required{{/if}} />
-  {{#each field_type.variants}}
-    <SlOption value="{{kebab_case this}}">{{title_case this}}</SlOption>
-  {{/each}}
-</SlSelect>
+<SlSelect label="{{label}}" name="{{field_name}}" onSlChange={handleChange}{{#if required}} required{{/if}} >
+  {{#each field_type.variants}} <SlOption value="{{kebab_case this}}">{{title_case this}}</SlOption> {{/each}} </SlSelect>
