@@ -6,3 +6,14 @@ export interface {{pascal_case entry_type.name}} { {{#each entry_type.fields}}
   {{/if}}
   {{/each}}
 }
+
+{{#each entry_type.fields}}
+  {{#if (eq field_type.type "Enum")}}
+export interface {{field_type.label}} {
+  type:  
+    {{#each field_type.variants}}
+    | '{{this}}'
+    {{/each}};
+}
+  {{/if}}
+{{/each}}

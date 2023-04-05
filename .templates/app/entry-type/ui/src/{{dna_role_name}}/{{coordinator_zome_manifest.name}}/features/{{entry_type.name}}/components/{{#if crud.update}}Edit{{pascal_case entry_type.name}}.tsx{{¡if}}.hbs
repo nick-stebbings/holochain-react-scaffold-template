@@ -21,6 +21,13 @@ interface IEdit{{pascal_case entry_type.name}}Props {
   onEditCanceled?: () => void;
   on{{pascal_case entry_type.name}}Updated?: (actionHash: ActionHash) => void;
 }
+{{#uniq_lines}}
+  {{#each entry_type.fields}}
+    {{#if widget}}
+{{> (concat field_type.type "/" widget "/edit/wrapper") }}
+    {{/if}}
+  {{/each}}
+{{/uniq_lines}}
 
 const Edit{{pascal_case entry_type.name}} = ({currentRecord, onEditCanceled, on{{pascal_case entry_type.name}}Updated} : IEdit{{pascal_case entry_type.name}}Props) => {
   const client = useContext(ClientContext);
