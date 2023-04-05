@@ -1,1 +1,1 @@
-<mwc-textarea outlined label="{{label}}" {{#if variable_to_read}}:value="{{variable_to_read}}" {{/if}}@input="{{variable_to_change}} = $event.target.value" {{#if required}}required{{/if}}></mwc-textarea>
+<SlTextarea label="{{label}}" name="{{field_name}}" value={ {{~entry_name}}.{{field_name~}} } onSlChange={handleChange}{{#if required}} required{{/if}} />

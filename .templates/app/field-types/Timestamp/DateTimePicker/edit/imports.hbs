@@ -1,1 +1,10 @@
-import '@vaadin/date-time-picker/theme/material/vaadin-date-time-picker.js';
+import {createComponent} from '@lit-labs/react';
+import { DateTimePicker } from '@vaadin/date-time-picker';
+const VdDateTime = createComponent({
+    tagName: 'vaadin-date-time-picker',
+    elementClass: DateTimePicker,
+    react: React,
+    events: {
+        onChange: 'value-changed'
+    },
+  });
