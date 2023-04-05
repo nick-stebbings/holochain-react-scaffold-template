@@ -29,10 +29,6 @@ const {{pascal_case entry_type.name}}Details = ({ {{snake_case entry_type.name}}
     fetch{{pascal_case entry_type.name}}()
   } ,[])
 
-  const is{{pascal_case entry_type.name}}Valid = () => {
-      return true{{#each entry_type.fields}}{{#if widget}}{{#if (eq cardinality "single")}} && {{> (concat field_type.type "/" widget "/is-valid") variable_to_validate=(concat (snake_case ../entry_type.name) "?." (camel_case field_name)) }}{{/if}}{{#if (eq cardinality "vector")}} && {{snake_case ../entry_type.name}}.{{camel_case field_name}}.every(e => {{> (concat field_type.type "/" widget "/is-valid") variable_to_validate="e" }}){{/if}}{{/if}}{{/each}};
-  };
-
   const fetch{{pascal_case entry_type.name}} = async () => {
     setLoading(true);
 

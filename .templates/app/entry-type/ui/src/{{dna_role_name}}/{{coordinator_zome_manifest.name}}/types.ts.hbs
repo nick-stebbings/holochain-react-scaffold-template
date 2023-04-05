@@ -1,11 +1,9 @@
-{{#if (includes previous_file_content "} from '@holochain/client';\n\n")}}
-{{replace previous_file_content "} from '@holochain/client';\n\n;" (concat "} from '@holochain/client';\nimport {" (pascal_case entry_type.name) "} from './features/" (snake_case entry_type.name) "/types'")}}
-{{else}}
-{{replace previous_file_content "} from '@holochain/client';\nimport {" (concat "} from '@holochain/client';\nimport {\n" (pascal_case entry_type.name) ",\n")}}
-{{/if}}
-
 {{#if (includes previous_file_content "export type EntryTypes = {};")}}
 {{replace previous_file_content "export type EntryTypes = {};" (concat "export type EntryTypes =\n | ({  type: '" (pascal_case entry_type.name) "'; } & " (pascal_case entry_type.name) ");")}}
+
+import { {{pascal_case entry_type.name}} } from './features/{{snake_case entry_type.name}}/types';
 {{else}}
 {{replace previous_file_content "export type EntryTypes =" (concat "export type EntryTypes =\n | ({ type: '" (pascal_case entry_type.name) "'; } & " (pascal_case entry_type.name) ")")}}
+
+import { {{pascal_case entry_type.name}} } from './features/{{snake_case entry_type.name}}/types';
 {{/if}}
