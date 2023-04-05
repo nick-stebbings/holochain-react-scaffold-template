@@ -5,10 +5,10 @@ import { decode } from '@msgpack/msgpack';
 
 import { SlAlert, SlButton, SlIcon, SlSpinner } from '@shoelace-style/shoelace/dist/react';
 
-import TodoDetail from './TodoDetail';
-import { {{pascal_case entry_type.name}}{{#each entry_type.fields}}{{#if (eq field_type.type "Enum")}}, {{field_type.label}}{{/if}}{{/each}} } from '../types';
+import {{pascal_case referenceable.name}}Detail from '{{pascal_case referenceable.name}}Detail';
+import { {{pascal_case referenceable.name}}{{#each entry_type.fields}}{{#if (eq field_type.type "Enum")}}, {{field_type.label}}{{/if}}{{/each}} } from '../types';
 
-const All{{pascal_case entry_type.name}}s = () => {
+const All{{pascal_case referenceable.name}}s = () => {
   const client = useContext(ClientContext);
   const [loading, setLoading] = useState(true);
   const [hashes, setHashes] = useState<Array<ActionHash>>();
@@ -16,17 +16,17 @@ const All{{pascal_case entry_type.name}}s = () => {
   const fetchErrorRef = useRef<any>(null);
 
   useEffect(async () => {
-    await fetch{{pascal_case entry_type.name}}s();
+    await fetch{{pascal_case referenceable.name}}s();
     client.on('signal', (signal : any) => {
-      if (signal.zome_name !== '{{snake_case entry_type.name}}s') return; 
-      const payload = signal.payload as {{pascal_case entry_type.name}}sSignal;
+      if (signal.zome_name !== '{{snake_case referenceable.name}}s') return; 
+      const payload = signal.payload as {{pascal_case referenceable.name}}sSignal;
       if (payload.type !== 'EntryCreated') return;
-      if (payload.app_entry.type !== '{{pascal_case entry_type.name}}') return;
+      if (payload.app_entry.type !== '{{pascal_case referenceable.name}}') return;
       if (hashes) setHashes([...hashes, payload.action.hashed.hash]);
     });
   } ,[])
 
-  const fetch{{pascal_case entry_type.name}}s = async () => {
+  const fetch{{pascal_case referenceable.name}}s = async () => {
     setLoading(true);
 
     try {
@@ -34,7 +34,7 @@ const All{{pascal_case entry_type.name}}s = () => {
         cap_secret: null,
         role_name: '{{dna_role_name}}',
         zome_name: '{{coordinator_zome_manifest.name}}',
-        fn_name: 'get_all_{{snake_case entry_type.name}}s',
+        fn_name: 'get_all_{{snake_case referenceable.name}}s',
         payload: null
       });
 
@@ -56,11 +56,11 @@ const All{{pascal_case entry_type.name}}s = () => {
       </SlAlert>
       {
         hashes.map((ah: ActionHash, i: number) => {
-          <{{pascal_case entry_type.name}}Details {{snake_case entry_type.name}}Hash={ah} on{{pascal_case entry_type.name}}Deleted={fetch{{pascal_case entry_type.name}}s} key={i} />
+          <{{pascal_case referenceable.name}}Details {{snake_case referenceable.name}}Hash={ah} on{{pascal_case referenceable.name}}Deleted={fetch{{pascal_case referenceable.name}}s} key={i} />
         })
       }
     </>
   );
 };
 
-export default All{{pascal_case entry_type.name}}s;
+export default All{{pascal_case referenceable.name}}s;
