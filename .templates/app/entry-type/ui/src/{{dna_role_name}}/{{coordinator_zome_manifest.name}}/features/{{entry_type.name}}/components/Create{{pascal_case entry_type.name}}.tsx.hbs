@@ -16,15 +16,15 @@ import { {{pascal_case entry_type.name}}{{#each entry_type.fields}}{{#if (eq fie
 
 interface ICreate{{pascal_case entry_type.name}}Props {
   onCreateCanceled?: () => void;
-  on{{pascal_case entry_type.name}}Created?: (actionHash: Uint8Array) => void;
+  on{{pascal_case entry_type.name}}Created?: (actionHash: Uint8Array, record: Record) => void;
 }
 
 const Create{{pascal_case entry_type.name}} = ({onCreateCanceled, on{{pascal_case entry_type.name}}Created} : ICreate{{pascal_case entry_type.name}}Props) => {
   const client = useContext(ClientContext);
 
   const formRef = useRef<HTMLFormElement>(null);
-  const createSuccessRef = useRef<typeof SlAlert>(undefined);
-  const createErrorRef = useRef<typeof SlAlert>(undefined);
+  const createSuccessRef = useRef<any>(null);
+  const createErrorRef = useRef<any>(null);
   const current{{pascal_case entry_type.name}}: {{pascal_case entry_type.name}} = { {{#each entry_type.fields}}
           {{#if (eq cardinality "single") }}
           {{snake_case field_name}}:{{#if widget}}{{> (concat field_type.type "/" widget "/initial-value") }}{{/if}},
@@ -49,10 +49,11 @@ const Create{{pascal_case entry_type.name}} = ({onCreateCanceled, on{{pascal_cas
         fn_name: 'create_{{snake_case entry_type.name}}',
         payload: {{camel_case entry_type.name}}
       });
-      !!on{{pascal_case entry_type.name}}Created && on{{pascal_case entry_type.name}}Created!(createRecord.signed_action.hashed.hash);
+      !!on{{pascal_case entry_type.name}}Created && on{{pascal_case entry_type.name}}Created!(createRecord.signed_action.hashed.hash, createRecord);
+      formRef.current?.reset();
+      createSuccessRef?.current.toast();
     } catch (e: any) {
-      createErrorRef!.current.show();
-      createErrorRef!.current.toast();
+      createErrorRef?.current.toast();
     }
   };
 

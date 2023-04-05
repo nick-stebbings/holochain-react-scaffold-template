@@ -52,6 +52,7 @@ const Edit{{pascal_case entry_type.name}} = ({currentRecord, onEditCanceled, on{
         }
       });
       !!on{{pascal_case entry_type.name}}Updated && on{{pascal_case entry_type.name}}Updated!(updateRecord.signed_action.hashed.hash);
+      updateSuccessRef?.current.toast();
     } catch (e: any) {
       updateErrorRef?.current.toast();
     }
