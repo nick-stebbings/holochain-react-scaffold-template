@@ -1,5 +1,5 @@
 import React, { useState, useContext, useRef, useEffect } from 'react';
-import { Record, EntryHash, ActionHash } from '@holochain/client';
+import { Record, EntryHash, ActionHashB64 } from '@holochain/client';
 import { ClientContext } from '../../../../../clientContext';
 import { decode } from '@msgpack/msgpack';
 
@@ -9,7 +9,7 @@ import Edit{{pascal_case entry_type.name}} from './Edit{{pascal_case entry_type.
 import { {{pascal_case entry_type.name}}{{#each entry_type.fields}}{{#if (eq field_type.type "Enum")}}, {{field_type.label}}{{/if}}{{/each}} } from '../types';
 
 interface I{{pascal_case entry_type.name}}DetailsProps {
-  {{snake_case entry_type.name}}Hash: ActionHash;
+  {{snake_case entry_type.name}}Hash: ActionHashB64;
   onFetchCanceled?: () => void;
   on{{pascal_case entry_type.name}}Deleted?: () => void;
 }
