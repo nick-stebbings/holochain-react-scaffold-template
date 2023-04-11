@@ -1,5 +1,5 @@
 import React, { useState, useContext, useRef, useEffect } from 'react';
-import { Record, EntryHash, ActionHashB64 } from '@holochain/client';
+import { Record, encodeHashToBase64, ActionHashB64 } from '@holochain/client';
 import { ClientContext } from '../../../../../clientContext';
 import { decode } from '@msgpack/msgpack';
 
@@ -71,22 +71,22 @@ const {{pascal_case entry_type.name}}Details = ({ {{snake_case entry_type.name}}
     <>
       <SlAlert variant="success" ref={deleteSuccessRef}>
         <SlIcon slot="icon" name="check2-circle" />
-        <strong>Your new record has been deleted</strong>
+        <strong>Delete completed</strong>
         <br />
-        You can safely return now.
+          Your record has been deleted.
       </SlAlert>
       <SlAlert variant="warning" ref={deleteErrorRef}>
         <SlIcon slot="icon" name="exclamation-triangle" />
         <strong>Oh dear!</strong>
         <br />
-          There was an error deleting your record
+          There was an error deleting your record.
       </SlAlert>
 
       { editing
         ? <Edit{{pascal_case entry_type.name}}
             currentRecord={record}
-            original{{pascal_case entry_type.name}}Hash={(record.signed_action.hashed.hash) as ActionHash}
-            
+            original{{pascal_case entry_type.name}}Hash={encodeHashToBase64(record.signed_action.hashed.hash) as ActionHashB64}
+            // onEditCanceled=""
             on{{pascal_case entry_type.name}}Updated={ () => { setEditing(false); fetch{{pascal_case entry_type.name}}() } }
           />
         : <div>
