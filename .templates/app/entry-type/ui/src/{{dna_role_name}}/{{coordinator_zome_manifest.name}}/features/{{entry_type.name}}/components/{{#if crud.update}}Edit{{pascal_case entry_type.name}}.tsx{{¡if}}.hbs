@@ -21,13 +21,11 @@ interface IEdit{{pascal_case entry_type.name}}Props {
   onEditCanceled?: () => void;
   on{{pascal_case entry_type.name}}Updated?: (actionHash: ActionHash) => void;
 }
-{{#uniq_lines}}
-  {{#each entry_type.fields}}
-    {{#if widget}}
+{{#each entry_type.fields}}
+  {{#if widget}}
 {{> (concat field_type.type "/" widget "/edit/wrapper") }}
-    {{/if}}
-  {{/each}}
-{{/uniq_lines}}
+  {{/if}}
+{{/each}}
 
 const Edit{{pascal_case entry_type.name}} = ({currentRecord, onEditCanceled, on{{pascal_case entry_type.name}}Updated} : IEdit{{pascal_case entry_type.name}}Props) => {
   const client = useContext(ClientContext);
@@ -65,8 +63,12 @@ const Edit{{pascal_case entry_type.name}} = ({currentRecord, onEditCanceled, on{
     }
   };
 
-  const handleChange = async (event: any) => {
-    const value = (event.target as SlInputElement).value;
+  const handleChange = async (input: any) => {
+    let value;
+    if(typeof input == 'object' && Object.keys(input).includes('type')) { value = input } // We are dealing with an enumerator type
+    else {
+      value = (event.target as SlInputElement).value;
+    }
 
     set{{pascal_case entry_type.name}}({
       ...{{snake_case entry_type.name}},

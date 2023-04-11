@@ -11,13 +11,11 @@ import { SlAlert, SlButton, SlIcon } from '@shoelace-style/shoelace/dist/react';
     {{/if}}
   {{/each}}
 {{/uniq_lines}}
-{{#uniq_lines}}
-  {{#each entry_type.fields}}
-    {{#if widget}}
+{{#each entry_type.fields}}
+  {{#if widget}}
 {{> (concat field_type.type "/" widget "/edit/wrapper") }}
-    {{/if}}
-  {{/each}}
-{{/uniq_lines}}
+  {{/if}}
+{{/each}}
 import { {{pascal_case entry_type.name}}{{#each entry_type.fields}}{{#if (eq field_type.type "Enum")}}, {{field_type.label}}{{/if}}{{/each}} } from '../types';
 
 interface ICreate{{pascal_case entry_type.name}}Props {
