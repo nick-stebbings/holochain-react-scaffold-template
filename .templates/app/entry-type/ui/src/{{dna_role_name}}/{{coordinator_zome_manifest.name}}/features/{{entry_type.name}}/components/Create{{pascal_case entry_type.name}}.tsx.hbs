@@ -61,12 +61,17 @@ const Create{{pascal_case entry_type.name}} = ({onCreateCanceled, on{{pascal_cas
     }
   };
 
-  const handleChange = async (event: any) => {
-    const value = (event.target as SlInputElement).value;
+  const handleChange = async ({event: {target}, data} : { event: any } & { data?: any } ) => {
+    let value;
+    if(data && data?.type) { // We are dealing with an enumerator type
+      value = data
+    } else {
+      value = (target as SlInputElement).value;
+    }
 
     set{{pascal_case entry_type.name}}({
       ...{{snake_case entry_type.name}},
-      [event.target.name]: value
+      [target.name]: value
     });
   }
 
