@@ -92,12 +92,18 @@ const {{pascal_case entry_type.name}}Details = ({ {{snake_case entry_type.name}}
         : <div>
             <span>Your {{title_case entry_type.name}}</span>
             {
-              JSON.stringify({{pascal_case entry_type.name}}, null, 2)
+              {{snake_case entry_type.name}} && <pre>JSON.stringify({{snake_case entry_type.name}}, null, 2)</pre>
             }
+
+            <SlButton 
+              variant="warning"
+              type="submit"
+              onClick={ () => setEditing(true) }
+            >Edit
+            </SlButton>
             <SlButton 
               variant="danger"
               type="button"
-              outline
               onClick={ delete{{pascal_case entry_type.name}} }
             >Delete
             </SlButton>

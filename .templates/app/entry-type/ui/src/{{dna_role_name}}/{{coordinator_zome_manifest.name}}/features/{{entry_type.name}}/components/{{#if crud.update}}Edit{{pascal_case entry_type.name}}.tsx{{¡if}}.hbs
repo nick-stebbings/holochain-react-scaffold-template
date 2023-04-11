@@ -1,5 +1,5 @@
 import React, { useState, useContext, useRef } from 'react';
-import { Record, EntryHash, ActionHashB64 } from '@holochain/client';
+import { Record, encodeHashToBase64, ActionHashB64 } from '@holochain/client';
 import { ClientContext } from '../../../../../clientContext';
 import { decode } from '@msgpack/msgpack';
 
@@ -19,7 +19,7 @@ interface IEdit{{pascal_case entry_type.name}}Props {
   currentRecord: Record;
   original{{pascal_case entry_type.name}}Hash: ActionHashB64;
   onEditCanceled?: () => void;
-  on{{pascal_case entry_type.name}}Updated?: (actionHash: ActionHash) => void;
+  on{{pascal_case entry_type.name}}Updated?: (actionHash: ActionHashB64) => void;
 }
 {{#each entry_type.fields}}
   {{#if widget}}
@@ -56,7 +56,7 @@ const Edit{{pascal_case entry_type.name}} = ({currentRecord, onEditCanceled, on{
           updated_{{snake_case entry_type.name}}: {{camel_case entry_type.name}}
         }
       });
-      !!on{{pascal_case entry_type.name}}Updated && on{{pascal_case entry_type.name}}Updated!(updateRecord.signed_action.hashed.hash);
+      !!on{{pascal_case entry_type.name}}Updated && on{{pascal_case entry_type.name}}Updated!(encodeHashToBase64(updateRecord.signed_action.hashed.hash) as ActionHashB64);
       updateSuccessRef?.current.toast();
     } catch (e: any) {
       updateErrorRef?.current.toast();
