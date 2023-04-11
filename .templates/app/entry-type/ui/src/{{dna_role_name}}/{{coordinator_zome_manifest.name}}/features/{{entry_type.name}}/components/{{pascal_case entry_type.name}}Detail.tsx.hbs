@@ -92,7 +92,7 @@ const {{pascal_case entry_type.name}}Details = ({ {{snake_case entry_type.name}}
         : <div>
             <span>Your {{title_case entry_type.name}}</span>
             {
-              JSON.stringify(todo, null, 2)
+              JSON.stringify({{pascal_case entry_type.name}}, null, 2)
             }
             <SlButton 
               variant="danger"
