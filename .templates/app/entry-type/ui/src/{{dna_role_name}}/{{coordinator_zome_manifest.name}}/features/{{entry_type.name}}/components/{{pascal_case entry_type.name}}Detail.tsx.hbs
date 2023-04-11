@@ -10,11 +10,10 @@ import { {{pascal_case entry_type.name}}{{#each entry_type.fields}}{{#if (eq fie
 
 interface I{{pascal_case entry_type.name}}DetailsProps {
   {{snake_case entry_type.name}}Hash: ActionHashB64;
-  onFetchCanceled?: () => void;
   on{{pascal_case entry_type.name}}Deleted?: () => void;
 }
 
-const {{pascal_case entry_type.name}}Details = ({ {{snake_case entry_type.name}}Hash, onFetchCanceled, on{{pascal_case entry_type.name}}Deleted} : I{{pascal_case entry_type.name}}DetailsProps) => {
+const {{pascal_case entry_type.name}}Details = ({ {{snake_case entry_type.name}}Hash, on{{pascal_case entry_type.name}}Deleted} : I{{pascal_case entry_type.name}}DetailsProps) => {
   const client = useContext(ClientContext);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);

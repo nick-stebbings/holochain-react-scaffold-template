@@ -1,1 +1,1 @@
-<VdDateTime label="{{label}}" name="{{field_name}}" value={ new Date({{~entry_name}}.{{field_name~}} / 1000).toISOString() } onChange={handleChange as any}{{#if required}} required{{/if}} />
+<VdDateTime label="{{label}}" name="{{field_name}}" value={ new Date({{~entry_name}}.{{field_name~}} / 1000).toISOString() } onChange={ (e: any) => handleChange({event: e})  }{{#if required}} required{{/if}} />

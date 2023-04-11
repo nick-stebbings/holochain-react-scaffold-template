@@ -1,1 +1,1 @@
-<SlRange label="{{label}}" name="{{field_name}}" value={ {{~entry_name}}.{{field_name~}} } onSlChange={handleChange as any}{{#if required}} required{{/if}} />
+<SlRange label="{{label}}" name="{{field_name}}" value={ {{~entry_name}}.{{field_name~}} } onSlChange={ (e: any) => handleChange({event: e})  }{{#if required}} required{{/if}} />
