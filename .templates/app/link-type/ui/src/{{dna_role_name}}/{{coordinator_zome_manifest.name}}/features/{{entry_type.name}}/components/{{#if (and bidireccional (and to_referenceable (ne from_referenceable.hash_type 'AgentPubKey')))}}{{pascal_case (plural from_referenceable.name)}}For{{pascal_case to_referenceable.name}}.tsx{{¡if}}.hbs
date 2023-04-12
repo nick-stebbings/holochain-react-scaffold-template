@@ -11,7 +11,7 @@ import { {{pascal_case from_referenceable.name}}sSignal } from '../../../types';
 const {{pascal_case (plural from_referenceable.name)}}For{{pascal_case to_referenceable.name}} = ({ {{pascal_case to_referenceable.name}}Hash } : I{{pascal_case (plural from_referenceable.name)}}For{{pascal_case to_referenceable.name}}Props) => {
   const client = useContext(ClientContext);
   const [loading, setLoading] = useState(true);
-  const [{{pascal_case from_referenceable.name}}Hash, set{{title_case from_referenceable.name}}Hash] = useState<ActionHashB64>();
+  const [{{camel_case from_referenceable.name}}Hash, set{{title_case from_referenceable.name}}Hash] = useState<ActionHashB64>();
   const [hashes, setHashes] = useState<Array<ActionHashB64>>();
 
   const fetchErrorRef = useRef<any>(null);
@@ -19,26 +19,26 @@ const {{pascal_case (plural from_referenceable.name)}}For{{pascal_case to_refere
   useEffect(() => {
     fetch{{pascal_case (plural from_referenceable.name)}}For{{pascal_case to_referenceable.name}}();
 
-      {{!-- client.on('signal', (signal : any) => {
-        if (signal.zome_name !== '{{coordinator_zome_manifest.name}}') return; 
-        const payload = signal.payload as {{pascal_case coordinator_zome_manifest.name}}Signal;
-        if (payload.type !== 'LinkCreated') return;
-        if (payload.link_type !== '{{pascal_case link_type_name}}') return;
+    client.on('signal', (signal : any) => {
+      if (signal.zome_name !== '{{coordinator_zome_manifest.name}}') return; 
+      const payload = signal.payload as {{pascal_case coordinator_zome_manifest.name}}Signal;
+      if (payload.type !== 'LinkCreated') return;
+      if (payload.link_type !== '{{pascal_case link_type_name}}') return;
 
-        if (this.hashes) this.hashes.push(payload.action.hashed.content.target_address);
-      }); --}}
+      if (hashes) hashes.push(payload.action.hashed.content.target_address);
+    });
   } ,[])
 
   const fetch{{pascal_case (plural from_referenceable.name)}}For{{pascal_case to_referenceable.name}} = async () => {
     setLoading(true);
 
     try {
-      const maybeRecords: Array<Record> = await this.client.callZome({
+      const maybeRecords: Array<Record> = await client.callZome({
         cap_secret: null,
         role_name: '{{dna_role_name}}',
         zome_name: '{{coordinator_zome_manifest.name}}',
         fn_name: 'get_{{snake_case (plural from_referenceable.name)}}_for_{{snake_case to_referenceable.name}}',
-        payload: this.{{camel_case to_referenceable.singular_arg}},
+        payload: {{camel_case to_referenceable.singular_arg}},
       });
 
       setHashes(maybeRecords.map(r => encodeHashToBase64({{#if (eq from_referenceable.hash_type "ActionHash")}}r.signed_action.hashed.hash{{else}}(r.signed_action.hashed.content as NewEntryAction).entry_hash{{/if}})));
@@ -49,7 +49,7 @@ const {{pascal_case (plural from_referenceable.name)}}For{{pascal_case to_refere
   };
 
   return loading ? <SlSpinner></SlSpinner> :
-    !{{pascal_case from_referenceable.name}}Hash ? <p>The {{camel_case to_referenceable.singular_arg}} input is required for the {{pascal_case (plural from_referenceable.name)}}For{{pascal_case from_referenceable.name}} element</p> :
+    !{{camel_case from_referenceable.name}}Hash ? <p>The {{camel_case to_referenceable.singular_arg}} input is required for the {{pascal_case (plural from_referenceable.name)}}For{{pascal_case from_referenceable.name}} element</p> :
     !hashes || hashes && hashes.length == 0 ? <p>No records found</p> : (
     <>
       <SlAlert variant="warning" ref={fetchErrorRef}>
@@ -60,7 +60,7 @@ const {{pascal_case (plural from_referenceable.name)}}For{{pascal_case to_refere
       </SlAlert>
       {
         hashes.map((ah: ActionHashB64, i: number) => 
-          <{{pascal_case from_referenceable.name}}Details {{snake_case from_referenceable.name}}Hash={ah} on{{pascal_case from_referenceable.name}}Deleted={fetch{{pascal_case from_referenceable.name}}s} key={i} />
+          <{{pascal_case from_referenceable.name}}Details {{snake_case from_referenceable.name}}Hash={ah} on{{pascal_case from_referenceable.name}}Deleted={ fetch{{pascal_case (plural from_referenceable.name)}}For{{pascal_case to_referenceable.name}} } key={i} />
         )
       }
     </>
