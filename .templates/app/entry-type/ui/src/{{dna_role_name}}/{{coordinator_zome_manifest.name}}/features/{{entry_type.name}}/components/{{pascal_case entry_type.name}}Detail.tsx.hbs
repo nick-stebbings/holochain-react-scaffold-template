@@ -47,6 +47,7 @@ const {{pascal_case entry_type.name}}Details = ({ {{snake_case entry_type.name}}
     }
     setLoading(false);
   };
+
   const delete{{pascal_case entry_type.name}} = async () => {
     try {
       setLoading(true);
@@ -86,13 +87,13 @@ const {{pascal_case entry_type.name}}Details = ({ {{snake_case entry_type.name}}
         ? <Edit{{pascal_case entry_type.name}}
             currentRecord={record}
             original{{pascal_case entry_type.name}}Hash={encodeHashToBase64(record.signed_action.hashed.hash) as ActionHashB64}
-            // onEditCanceled=""
+            onEditCanceled={ () => { setEditing(false) } }
             on{{pascal_case entry_type.name}}Updated={ () => { setEditing(false); fetch{{pascal_case entry_type.name}}() } }
           />
         : <div>
-            <span>Your {{title_case entry_type.name}}</span>
+            <span>Your {{title_case entry_type.name}}'s Hash</span>
             {
-              {{snake_case entry_type.name}} && <pre>JSON.stringify({{snake_case entry_type.name}}, null, 2)</pre>
+                record && <pre> { JSON.stringify({{snake_case entry_type.name}}Hash, null, 2) }</pre>
             }
 
             <SlButton 

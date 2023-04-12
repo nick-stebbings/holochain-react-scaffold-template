@@ -27,7 +27,7 @@ interface IEdit{{pascal_case entry_type.name}}Props {
   {{/if}}
 {{/each}}
 
-const Edit{{pascal_case entry_type.name}} = ({currentRecord, onEditCanceled, on{{pascal_case entry_type.name}}Updated} : IEdit{{pascal_case entry_type.name}}Props) => {
+const Edit{{pascal_case entry_type.name}} = ({currentRecord, onEditCanceled, original{{pascal_case entry_type.name}}Hash, on{{pascal_case entry_type.name}}Updated} : IEdit{{pascal_case entry_type.name}}Props) => {
   const client = useContext(ClientContext);
 
   const formRef = useRef<HTMLFormElement>(null);
@@ -82,9 +82,9 @@ const Edit{{pascal_case entry_type.name}} = ({currentRecord, onEditCanceled, on{
     <>
       <SlAlert variant="success" ref={updateSuccessRef}>
         <SlIcon slot="icon" name="check2-circle" />
-        <strong>Your changes have been saved</strong>
+        <strong>Operation was successful</strong>
         <br />
-        You can safely return now.
+          Your changes have been saved
       </SlAlert>
       <SlAlert variant="warning" ref={updateErrorRef}>
         <SlIcon slot="icon" name="exclamation-triangle" />
@@ -103,6 +103,7 @@ const Edit{{pascal_case entry_type.name}} = ({currentRecord, onEditCanceled, on{
               {{/if}}
             {{/each}}
           {{/uniq_lines}}
+          
           <div>
             <SlButton 
               variant="neutral"
