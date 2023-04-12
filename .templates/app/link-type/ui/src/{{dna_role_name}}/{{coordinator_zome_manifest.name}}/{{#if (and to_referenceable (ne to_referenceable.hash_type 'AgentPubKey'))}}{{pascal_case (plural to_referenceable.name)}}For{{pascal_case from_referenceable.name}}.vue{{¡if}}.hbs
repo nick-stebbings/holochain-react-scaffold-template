@@ -4,9 +4,9 @@ import { ClientContext } from '../../../../../clientContext';
 
 import { SlAlert, SlIcon, SlSpinner } from '@shoelace-style/shoelace/dist/react';
 
-import {{pascal_case referenceable.name}}Details from './{{pascal_case referenceable.name}}Detail';
-import { {{pascal_case referenceable.name}}{{#each entry_type.fields}}{{#if (eq field_type.type "Enum")}}, {{field_type.label}}{{/if}}{{/each}} } from '../types';
-import { {{pascal_case referenceable.name}}sSignal } from '../../../types';
+import {{pascal_case to_referenceable.name}}Details from './{{pascal_case to_referenceable.name}}Detail';
+import { {{pascal_case to_referenceable.name}}{{#each entry_type.fields}}{{#if (eq field_type.type "Enum")}}, {{field_type.label}}{{/if}}{{/each}} } from '../types';
+import { {{pascal_case to_referenceable.name}}sSignal } from '../../../types';
 
 interface I{{pascal_case (plural to_referenceable.name)}}For{{pascal_case from_referenceable.name}}Props {
   {{pascal_case from_referenceable.name}}Hash?: ActionHashB64;
@@ -64,7 +64,7 @@ const {{pascal_case (plural to_referenceable.name)}}For{{pascal_case from_refere
       </SlAlert>
       {
         hashes.map((ah: ActionHashB64, i: number) => 
-          <{{pascal_case referenceable.name}}Details {{snake_case referenceable.name}}Hash={ah} on{{pascal_case referenceable.name}}Deleted={fetch{{pascal_case referenceable.name}}s} key={i} />
+          <{{pascal_case to_referenceable.name}}Details {{snake_case to_referenceable.name}}Hash={ah} on{{pascal_case to_referenceable.name}}Deleted={fetch{{pascal_case to_referenceable.name}}s} key={i} />
         )
       }
     </>
