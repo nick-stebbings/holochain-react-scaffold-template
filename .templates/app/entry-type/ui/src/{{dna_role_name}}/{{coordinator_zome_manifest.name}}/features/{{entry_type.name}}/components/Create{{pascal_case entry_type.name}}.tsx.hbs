@@ -34,7 +34,7 @@ const Create{{pascal_case entry_type.name}} = ({onCreateCanceled, on{{pascal_cas
           {{snake_case field_name}}:{{#if widget}}{{> (concat field_type.type "/" widget "/initial-value") }}{{/if}},
           {{else}}
           {{snake_case field_name}}: {{#if widget}}
-            {{#if (eq cardinality "vector")}} {{> (concat field_type.type "/" widget "/initial-value") }}{{else}}[]{{/if}}{{/if}}{{#if (eq cardinality "vector") }} as Array<{{> (concat field_type.type "/type") }}>{{/if}},
+            {{#if (eq cardinality "vector")}} [{{> (concat field_type.type "/" widget "/initial-value") }}]{{else}}{{> (concat field_type.type "/" widget "/initial-value") }}{{/if}}{{/if}}{{#if (eq cardinality "vector") }} as Array<{{> (concat field_type.type "/type") }}>{{/if}},
           {{/if}}
     {{/each}}
   };
@@ -63,7 +63,7 @@ const Create{{pascal_case entry_type.name}} = ({onCreateCanceled, on{{pascal_cas
   };
 
   const handleChange = async ({event: {target}, data} : { event: any } & { data?: any } ) => {
-    const value = data && !!data?.type ? data : (target as SlInputElement).value  // disambiguate between enum field types which have a data payload
+    const value = data && !!data?.type ? data : (target as SlInputElement)?.value || target?.checked // disambiguate between enum field types which have a data payload
 
     set{{pascal_case entry_type.name}}({
       ...{{snake_case entry_type.name}},
