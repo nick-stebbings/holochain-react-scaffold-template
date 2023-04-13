@@ -33,7 +33,8 @@ const Create{{pascal_case entry_type.name}} = ({onCreateCanceled, on{{pascal_cas
           {{#if (eq cardinality "single") }}
           {{snake_case field_name}}:{{#if widget}}{{> (concat field_type.type "/" widget "/initial-value") }}{{/if}},
           {{else}}
-          {{snake_case field_name}}: this.{{camel_case field_name}}{{#if (eq cardinality "vector") }} as Array<{{> (concat field_type.type "/type") }}>{{/if}},
+          {{snake_case field_name}}: {{#if widget}}
+            {{#if (eq cardinality "vector")}} {{> (concat field_type.type "/" widget "/initial-value") }}{{else}}[]{{/if}}{{/if}}{{#if (eq cardinality "vector") }} as Array<{{> (concat field_type.type "/type") }}>{{/if}},
           {{/if}}
     {{/each}}
   };
