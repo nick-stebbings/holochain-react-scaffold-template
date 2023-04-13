@@ -1,1 +1,1 @@
-<SlRange label="{{label}}" name="{{field_name}}{{#if vec}}[{{key}}]{{/if}}" value={ {{~entry_name}}.{{field_name~}}{{#if vec}}[{{key}}]{{/if}} } onSlChange={ (e: any) => handleChange({event: e})  }{{#if vec}} key="{{key}}"{{/if}}{{#if required}} required{{/if}} />
+<SlRange label="{{label}}" name="{{field_name}}{{#if vec}}[{{key}}]{{/if}}" value={ {{~entry_name}}.{{field_name~}}{{#if vec}}[{{key}}]{{/if}} } onSlChange={ (e: any) => handleChange({event: e})  }{{#if vec}} key={ {{key}} }{{/if}}{{#if required}} required{{/if}} />
