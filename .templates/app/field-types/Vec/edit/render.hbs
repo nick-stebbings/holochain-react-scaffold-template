@@ -1,8 +1,9 @@
 <>
   <span><strong>{{title_case field_name}}</strong></span>
-  {{~entry_name}}.{{field_name~}} }.map((el: any, i: number) => {
-    return {{> (concat field_type.type "/" widget "/edit/render") vec="true"}}
+  { {{~entry_name}}.{{field_name~}} }.map((el: any, i: number) => {
+    return {{> (concat field_type.type "/" widget "/edit/render") vec=true key=key}}
   })
+  }
   <SlButton 
     variant="success"
     type="button"
