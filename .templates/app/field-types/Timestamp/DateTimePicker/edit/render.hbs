@@ -1,1 +1,1 @@
-<VdDateTime label="{{label}}" name="{{field_name}}" value={ new Date({{~entry_name}}.{{field_name~}}).toISOString() } onChange={ (e: any) => { e.target.value = +(new Date(e.target.value)); handleChange({event: e}) } }{{#if required}} required{{/if}} />
+<VdDateTime label="{{label}}" name="{{field_name~}}{{#if vec}}[{{key}}]{{/if}}" value={ new Date({{~entry_name}}.{{field_name~}}).toISOString() } onChange={ (e: any) => { e.target.value = +(new Date(e.target.value)); handleChange({event: e}) } }{{#if vec}} key={ {{key}} }{{/if}}{{#if required}} required{{/if}} />

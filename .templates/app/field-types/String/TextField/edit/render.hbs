@@ -1,1 +1,1 @@
-<SlInput label="{{label}}" name="{{field_name}}" value={ {{~entry_name}}.{{field_name~}} } onSlChange={ (e: any) => handleChange({event: e})  }{{#if required}} required{{/if}} />
+<SlInput label="{{label}}" name="{{field_name~}}{{#if vec}}[{{key}}]{{/if}}" value={ {{~entry_name}}.{{field_name~}} } onSlChange={ (e: any) => handleChange({event: e})  }{{#if vec}} key={ {{key}} }{{/if}}{{#if required}} required{{/if}} />
