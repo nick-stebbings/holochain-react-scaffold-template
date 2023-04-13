@@ -7,7 +7,7 @@
   <SlButton 
     variant="success"
     type="button"
-    onClick={ () => set{{pascal_case entry_name}}([ ...{{camel_case {{~entry_name}}.{{field_name~}} }}, {{> (concat field_type.type "/" widget "/initial-value") field_type=field_type}}]) }
+    onClick={ () => set{{pascal_case entry_name}}([ ...{{concat (camel_case entry_name) "." field_name }}, {{> (concat field_type.type "/" widget "/initial-value") field_type=field_type}}]) }
   >Add
   </SlButton>
 </>
