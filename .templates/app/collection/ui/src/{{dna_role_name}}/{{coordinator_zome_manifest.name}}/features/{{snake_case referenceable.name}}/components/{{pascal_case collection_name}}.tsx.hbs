@@ -1,5 +1,5 @@
 import React, { useState, useContext, useRef, useEffect } from 'react';
-import { Record, ActionHashB64, encodeHashToBase64 } from '@holochain/client';
+import { Record, ActionHashB64, encodeHashToBase64, AgentPubKeyB64 } from '@holochain/client';
 import { ClientContext } from '../../../../../clientContext';
 
 import { SlAlert, SlIcon, SlSpinner } from '@shoelace-style/shoelace/dist/react';
@@ -8,7 +8,13 @@ import {{pascal_case referenceable.name}}Details from './{{pascal_case reference
 import { {{pascal_case referenceable.name}}{{#each entry_type.fields}}{{#if (eq field_type.type "Enum")}}, {{field_type.label}}{{/if}}{{/each}} } from '../types';
 import { {{pascal_case referenceable.name}}sSignal } from '../../../types';
 
-const All{{pascal_case referenceable.name}}s = () => {
+{{#if (eq collection_type.type "ByAuthor")}}
+interface IAll{{pascal_case referenceable.name}}sProps {
+  author: AgentPubKeyB64;
+}
+{{/if}}
+
+const All{{pascal_case referenceable.name}}s = ({{#if (eq collection_type.type "ByAuthor")}} { author } : interface IAll{{pascal_case referenceable.name}}sProps{{/if}}) => {
   const client = useContext(ClientContext);
   const [loading, setLoading] = useState(true);
   const [hashes, setHashes] = useState<Array<ActionHashB64>>();
@@ -17,13 +23,16 @@ const All{{pascal_case referenceable.name}}s = () => {
 
   useEffect(() => {
     fetch{{pascal_case referenceable.name}}s();
-    {{!-- client.on('signal', (signal : any) => {
+    client!.on('signal', (signal : any) => {
       if (signal.zome_name !== '{{snake_case referenceable.name}}s') return; 
       const payload = signal.payload as {{pascal_case referenceable.name}}sSignal;
       if (payload.type !== 'EntryCreated') return;
       if (payload.app_entry.type !== '{{pascal_case referenceable.name}}') return;
+{{#if (eq collection_type.type "ByAuthor")}}
+      if (author.toString() !== client!.myPubKey.toString()) return;
+{{/if}}
       if (hashes) setHashes([...hashes, payload.action.hashed.hash]);
-    }); --}}
+    });
   } ,[])
 
   const fetch{{pascal_case referenceable.name}}s = async () => {
@@ -35,7 +44,7 @@ const All{{pascal_case referenceable.name}}s = () => {
         role_name: '{{dna_role_name}}',
         zome_name: '{{coordinator_zome_manifest.name}}',
         fn_name: 'get_all_{{snake_case referenceable.name}}s',
-        payload: null
+        payload: {{#if (eq collection_type.type "ByAuthor")}}author{{else}}null{{/if}}
       });
 
       setHashes(maybeRecords.map(r => encodeHashToBase64(r.signed_action.hashed.hash) as ActionHashB64));
@@ -52,7 +61,7 @@ const All{{pascal_case referenceable.name}}s = () => {
         <SlIcon slot="icon" name="exclamation-triangle" />
         <strong>Oh dear!</strong>
         <br />
-          There was an error fetching your records
+          There was an error fetching your records. No record was found{{#if (eq collection_type.type "ByAuthor")}} for this author{{/if}}.
       </SlAlert>
       {
         hashes.map((ah: ActionHashB64, i: number) => 
