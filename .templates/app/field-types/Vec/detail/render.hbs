@@ -1,7 +1,7 @@
 <div>
   <span><strong>{{title_case field_name}}</strong></span>
-  { {{variable_to_read}}.map((el: any, i: number) => {
-    return <span>{{> (concat field_type.type "/" widget "/detail/render") variable_to_read="el" key="i"}}</span>
+  { {{~entry_name}}.{{field_name~}}.map((el: any, i: number) => {
+    return <span>{{> (concat field_type.type "/" widget "/detail/render") vec=true key="i"}}</span>
   })
   }
 </div>
