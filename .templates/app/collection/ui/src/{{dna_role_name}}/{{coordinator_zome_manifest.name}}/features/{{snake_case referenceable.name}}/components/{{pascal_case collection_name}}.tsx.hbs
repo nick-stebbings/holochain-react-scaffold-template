@@ -14,7 +14,7 @@ interface IAll{{pascal_case referenceable.name}}sProps {
 }
 {{/if}}
 
-const All{{pascal_case referenceable.name}}s = ({{#if (eq collection_type.type "ByAuthor")}} { author } : interface IAll{{pascal_case referenceable.name}}sProps{{/if}}) => {
+const All{{pascal_case referenceable.name}}s = ({{#if (eq collection_type.type "ByAuthor")}} { author } : IAll{{pascal_case referenceable.name}}sProps{{/if}}) => {
   const client = useContext(ClientContext);
   const [loading, setLoading] = useState(true);
   const [hashes, setHashes] = useState<Array<ActionHashB64>>();
@@ -31,7 +31,7 @@ const All{{pascal_case referenceable.name}}s = ({{#if (eq collection_type.type "
 {{#if (eq collection_type.type "ByAuthor")}}
       if (author.toString() !== client!.myPubKey.toString()) return;
 {{/if}}
-      if (hashes) setHashes([...hashes, payload.action.hashed.hash]);
+      if (hashes) setHashes([...hashes, (payload as any).action.hashed.hash]);
     });
   } ,[])
 
