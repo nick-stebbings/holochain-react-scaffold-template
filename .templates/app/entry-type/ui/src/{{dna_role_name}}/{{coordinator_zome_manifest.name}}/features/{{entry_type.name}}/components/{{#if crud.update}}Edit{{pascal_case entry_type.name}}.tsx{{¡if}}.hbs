@@ -95,14 +95,15 @@ const Edit{{pascal_case entry_type.name}} = ({currentRecord, onEditCanceled, ori
       <div>
         <span>Edit {{title_case entry_type.name}}</span>
         <form ref={formRef} onSubmit={handleSubmit}>
-          {{#uniq_lines}}
             {{#each entry_type.fields}}
               {{#if widget}}
+                  {{#if (not (eq cardinality "vector") )}}
           {{> (concat field_type.type "/" widget "/edit/render") field_name=field_name entry_name=(snake_case ../entry_type.name)}}
-
+                  {{else}}
+          {{> Vec/edit/render field_name=field_name field_type=field_type widget=widget entry_name=(snake_case ../entry_type.name) key=@index }}
+                  {{/if}}
               {{/if}}
             {{/each}}
-          {{/uniq_lines}}
           
           <div>
             <SlButton 

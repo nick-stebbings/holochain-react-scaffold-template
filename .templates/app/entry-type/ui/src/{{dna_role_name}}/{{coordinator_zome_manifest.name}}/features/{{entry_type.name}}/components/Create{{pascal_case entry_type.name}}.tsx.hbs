@@ -52,7 +52,7 @@ const Create{{pascal_case entry_type.name}} = ({onCreateCanceled, on{{pascal_cas
         role_name: '{{dna_role_name}}',
         zome_name: '{{coordinator_zome_manifest.name}}',
         fn_name: 'create_{{snake_case entry_type.name}}',
-        payload: {{camel_case entry_type.name}}
+        payload: {{snake_case entry_type.name}}
       });
       !!on{{pascal_case entry_type.name}}Created && on{{pascal_case entry_type.name}}Created!(createRecord.signed_action.hashed.hash, createRecord);
       formRef.current?.reset();
@@ -94,7 +94,6 @@ const Create{{pascal_case entry_type.name}} = ({onCreateCanceled, on{{pascal_cas
       <div>
         <span>Create {{title_case entry_type.name}}</span>
         <form ref={formRef} onSubmit={handleSubmit}>
-          {{#uniq_lines}}
             {{#each entry_type.fields}}
               {{#if widget}}
                   {{#if (not (eq cardinality "vector") )}}
@@ -104,7 +103,6 @@ const Create{{pascal_case entry_type.name}} = ({onCreateCanceled, on{{pascal_cas
                   {{/if}}
               {{/if}}
             {{/each}}
-          {{/uniq_lines}}
           
           <div>
             <SlButton 
