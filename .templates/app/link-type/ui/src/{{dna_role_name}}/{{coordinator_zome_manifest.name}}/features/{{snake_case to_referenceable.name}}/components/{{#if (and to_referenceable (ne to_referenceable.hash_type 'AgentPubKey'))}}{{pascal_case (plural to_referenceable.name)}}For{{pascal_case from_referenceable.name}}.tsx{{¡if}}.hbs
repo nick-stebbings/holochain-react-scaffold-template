@@ -22,13 +22,13 @@ const {{pascal_case (plural to_referenceable.name)}}For{{pascal_case from_refere
   useEffect(() => {
     fetch{{pascal_case (plural to_referenceable.name)}}For{{pascal_case from_referenceable.name}}();
 
-    client.on('signal', (signal : any) => {
+    client!.on('signal', (signal : any) => {
       if (signal.zome_name !== '{{coordinator_zome_manifest.name}}') return; 
       const payload = signal.payload as {{pascal_case coordinator_zome_manifest.name}}Signal;
       if (payload.type !== 'LinkCreated') return;
       if (payload.link_type !== '{{pascal_case link_type_name}}') return;
 
-      if (hashes) hashes.push(payload.action.hashed.content.target_address);
+      if (hashes) hashes.push(encodeHashToBase64(payload.action.hashed.content.target_address));
       });
   } ,[])
 
@@ -36,7 +36,7 @@ const {{pascal_case (plural to_referenceable.name)}}For{{pascal_case from_refere
     setLoading(true);
 
     try {
-      const maybeRecords: Array<Record> = await client.callZome({
+      const maybeRecords: Array<Record> = await client!.callZome({
         cap_secret: null,
         role_name: '{{dna_role_name}}',
         zome_name: '{{coordinator_zome_manifest.name}}',

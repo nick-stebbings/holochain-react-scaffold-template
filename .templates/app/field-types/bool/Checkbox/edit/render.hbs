@@ -1,3 +1,1 @@
-<mwc-formfield label="{{label}}">
-  <mwc-checkbox {{#if variable_to_read}}:checked="{{variable_to_read}}" {{/if}}@change="{{variable_to_change}} = $event.target.checked"></mwc-checkbox>
-</mwc-formfield>
+<SlCheckbox label="{{label}}" name="{{field_name}}" size="medium" checked={ {{~entry_name}}.{{field_name~}} } onSlChange={ (e: any) => handleChange({event: e})  }{{#if required}} required{{/if}} />
