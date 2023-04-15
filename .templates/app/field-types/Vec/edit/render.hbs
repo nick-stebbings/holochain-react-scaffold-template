@@ -1,11 +1,10 @@
-<>
-  <span><strong>{{title_case field_name}}</strong></span>
-  { {{~entry_name}}.{{field_name~}}.map((el: any, i: number) => {{> (concat field_type.type "/" widget "/edit/render") vec=true key=key}})
-  }
-  <SlButton 
-    variant="success"
-    type="button"
-    onClick={ () => set{{pascal_case entry_name}}({...{{camel_case entry_name}}, {{field_name}}: [ ...{{concat (camel_case entry_name) "." field_name }}, {{> (concat field_type.type "/" widget "/initial-value") field_type=field_type}}]}) }
-  >Add
-  </SlButton>
-</>
+  <div>
+    <span><strong>{{title_case field_name}}</strong></span>
+    { {{~entry_name}}.{{field_name~}}.map((el: any, i: number) => {{> (concat field_type.type "/" widget "/edit/render") vec=true key=key}}) }
+    <SlButton
+      variant="success"
+      type="button"
+      onClick={ () => set{{pascal_case entry_name}}({...{{camel_case entry_name}}, {{field_name}}: [ ...{{concat (camel_case entry_name) "." field_name }}, {{> (concat field_type.type "/" widget "/initial-value") field_type=field_type}}]}) }
+    >Add
+    </SlButton>
+  </div>
