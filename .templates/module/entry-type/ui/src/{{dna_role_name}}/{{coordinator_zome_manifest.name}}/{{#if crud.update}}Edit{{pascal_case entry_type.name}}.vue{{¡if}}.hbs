@@ -28,7 +28,7 @@
       <mwc-button 
         raised
         label="Save"
-        :disabled="!is{{pascal_case entry_type.name}}Valid"
+        :disabled="is{{pascal_case entry_type.name}}Invalid"
         @click="update{{pascal_case entry_type.name}}"
         style="flex: 1;"
       ></mwc-button>
