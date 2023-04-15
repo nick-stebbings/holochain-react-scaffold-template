@@ -1,1 +1,1 @@
-<SlCheckbox name="{{field_name~}}{{#if vec}}[{{key}}]{{/if}}" size="medium" checked={ {{~entry_name}}.{{field_name~}} } onSlChange={ (e: any) => handleChange({event: e})  }{{#if vec}} key={ {{key}} }{{/if}}{{#if required}} required{{/if}} />
+<SlCheckbox name={`{{field_name~}}{{#if vec}}[${i}]{{/if}}`} size="medium" checked={ {{~entry_name}}.{{field_name~}}{{#if vec}}[i]{{/if}} } onSlChange={ (e: any) => handleChange({event: e})  }{{#if vec}} key={i}{{/if}} {{#if required}} required{{/if}} />
