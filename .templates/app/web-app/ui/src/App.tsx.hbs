@@ -46,26 +46,26 @@ function App() {
                             <br /> elements.</span> <br /> <br />
                         <span>So, to use those elements here:</span>
                         <ol>
-                            <li>Import the elements with: <br />
+                            <li>Import the element and needed dependencies with: <br />
                                 <pre>
                                     <code>
                                         import { AgentPubKeyB64, AppAgentWebsocket, encodeHashToBase64 } from '@holochain/client';<br>
-                                        import AllTodos from './todos/todos/features/todo_item/components/AllTodos.tsx';<br>
                                         import CreateTodo from './todos/todos/features/todo_item/components/CreateTodo.tsx';
+                                        import TodoDetails from './todos/todos/features/todo_item/components/TodoDetails.tsx';<br>
                                     </code>
                                 </pre>
                             </li> <br /> <br />
                             <li>Add some state management (at the top of your App component code) so that your Details/Edit component will re-render on creating your Todo<br />
                                 <pre>
                                     <code>
-                                        const [hash, setHash] = useState<AgentPubKeyB64>();
+                                        const [hash, setHash] = useState&lt;AgentPubKeyB64&gt;();
                                     </code>
                                 </pre>
                             </li>
                             <li>Replace this "EDIT ME!" section with <br />
                                 <pre>
                                     <code>
-                                        &lt;CreateTodo onCreateCanceled={() =&gt; {}} onTodoCreated={(ah: any) =&gt; {setHash(encodeHashToBase64(ah))}}&gt;<br />&lt;/CreateTodo&gt; { hash &amp;&amp; &lt;TodoDetails todoHash={hash} &gt;&lt;/TodoDetails&gt;}
+                                        &lt;CreateTodo onCreateCanceled={() =&gt; {}} onTodoCreated={(actionHash: any) =&gt; {setHash(encodeHashToBase64(actionHash))}}&gt;&lt;/CreateTodo&gt; { hash &amp;&amp; &lt;TodoDetails todoHash={hash} &gt;&lt;/TodoDetails&gt;}
                                     </code>
                                 </pre>
                             </li>
