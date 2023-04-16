@@ -37,7 +37,7 @@ const Edit{{pascal_case entry_type.name}} = ({currentRecord, onEditCanceled, ori
   const current{{pascal_case entry_type.name}} = decode((currentRecord.entry as any).Present.entry) as {{pascal_case entry_type.name}};
   const [{{snake_case entry_type.name}}, set{{pascal_case entry_type.name}}] = useState<{{pascal_case entry_type.name}}>(current{{pascal_case entry_type.name}});
 
-  const is{{pascal_case entry_type.name}}Invalid = () => !(true{{#each entry_type.fields}}{{#if widget}}{{#if (eq cardinality "single")}} && {{> (concat field_type.type "/" widget "/is-valid") variable_to_validate=(concat (snake_case ../entry_type.name) "." (camel_case field_name)) }}{{/if}}{{#if (eq cardinality "vector")}} && {{snake_case ../entry_type.name}}.{{snake_case field_name}}.every(e: any => {{> (concat field_type.type "/" widget "/is-valid") variable_to_validate="e" }}){{/if}}{{/if}}{{/each}});
+  const is{{pascal_case entry_type.name}}Invalid = () => !(true{{#each entry_type.fields}}{{#if widget}}{{#if (eq cardinality "single")}} && {{> (concat field_type.type "/" widget "/is-valid") variable_to_validate=(concat (snake_case ../entry_type.name) "." (camel_case field_name)) }}{{/if}}{{#if (eq cardinality "vector")}} && {{snake_case ../entry_type.name}}.{{snake_case field_name}}.every((e: any) => {{> (concat field_type.type "/" widget "/is-valid") variable_to_validate="e" }}){{/if}}{{/if}}{{/each}});
 
   const update{{pascal_case entry_type.name}} = async () => {
     try {
@@ -123,7 +123,7 @@ const Edit{{pascal_case entry_type.name}} = ({currentRecord, onEditCanceled, ori
             <SlButton 
               variant="success"
               type="submit"
-              disabled={!is{{pascal_case entry_type.name}}Valid}
+              disabled={is{{pascal_case entry_type.name}}Inalid()}
             >Save
             </SlButton>
           </div>

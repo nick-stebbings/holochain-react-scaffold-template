@@ -49,8 +49,8 @@ function App() {
                             <li>Import the elements with: <br />
                                 <pre>
                                     <code>
-                                        import { AgentPubKeyB64 AppAgentWebsocket, encodeHashToBase64 } from '@holochain/client';
-                                        import AllTodos from './todos/todos/features/todo_item/components/AllTodos.tsx';
+                                        import { AgentPubKeyB64, AppAgentWebsocket, encodeHashToBase64 } from '@holochain/client';<br>
+                                        import AllTodos from './todos/todos/features/todo_item/components/AllTodos.tsx';<br>
                                         import CreateTodo from './todos/todos/features/todo_item/components/CreateTodo.tsx';
                                     </code>
                                 </pre>
@@ -65,8 +65,7 @@ function App() {
                             <li>Replace this "EDIT ME!" section with <br />
                                 <pre>
                                     <code>
-                                        <CreateTodo onCreateCanceled={() => {}} onTodoCreated={(ah: any) => {setHash(encodeHashToBase64(ah))}}></CreateTodo>            
-                                        { hash && <TodoDetails todoHash={hash} ></TodoDetails>}
+                                        &lt;CreateTodo onCreateCanceled={() =&gt; {}} onTodoCreated={(ah: any) =&gt; {setHash(encodeHashToBase64(ah))}}&gt;<br />&lt;/CreateTodo&gt; { hash &amp;&amp; &lt;TodoDetails todoHash={hash} &gt;&lt;/TodoDetails&gt;}
                                     </code>
                                 </pre>
                             </li>
