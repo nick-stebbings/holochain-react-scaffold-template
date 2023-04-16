@@ -1,1 +1,8 @@
-<SlInput label="{{label}}" name={`{{field_name~}}{{#if vec}}[${i}]{{/if}}`} value={ {{~entry_name}}.{{field_name~}}{{#if vec}}[i]{{/if}} } onSlChange={ (e: any) => handleChange({event: e}) }{{#if vec}} key={i}{{/if}} {{#if required}} required{{/if}} />
+<div className="form-group">
+    <span className="form-label">
+      <strong>{{pascal_case field_name}}</strong>
+    </span>
+    <div className="form-control">
+        <SlInput label="{{label}}" name={`{{field_name~}}{{#if vec}}[${i}]{{/if}}`} value={ {{~entry_name}}.{{field_name~}}{{#if vec}}[i]{{/if}} } onSlChange={ (e: any) => handleChange({event: e}) }{{#if vec}} key={i}{{/if}} {{#if required}} required{{/if}} />
+    </div>
+</div>
