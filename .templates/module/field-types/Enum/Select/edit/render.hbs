@@ -1,5 +1,8 @@
-<mwc-select outlined helper="{{label}}" {{#if required}}required{{/if}}>
-{{#each field_type.variants}}
-  <mwc-list-item {{#if ../variable_to_read}}:selected="{{../variable_to_read}}.type === '{{pascal_case this}}' "{{/if}} @request-selected="{{../variable_to_change}} = { type: '{{pascal_case this}}'}">{{title_case this}}</mwc-list-item>
-{{/each}}
-</mwc-select>
+<div className="form-group">
+    {{#unless vec}}<span className="form-label">
+      <strong>{{pascal_case field_name}}</strong>
+    </span>{{/unless}}
+    <div className="form-control">
+        <SlSelect name={`{{field_name~}}{{#if vec}}[${i}]{{/if}}`} onSlChange={ (e: any) => handleChange({event: e, data: {type: e.target.value}}) }{{#if vec}} key={i}{{/if}} {{#if required}} required{{/if}} >{{#each field_type.variants}} <SlOption value="{{title_case this}}">{{title_case this}}</SlOption> {{/each}} </SlSelect>
+    </div>
+</div>

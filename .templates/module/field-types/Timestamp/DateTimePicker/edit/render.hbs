@@ -1,2 +1,8 @@
-<vaadin-date-time-picker label="{{label}}" {{#if variable_to_read}}:value="new Date({{variable_to_read}} / 1000).toISOString()"{{/if}} @change="{{variable_to_change}} = new Date($event.target.value).valueOf() * 1000" {{#if required}}required{{/if}}></vaadin-date-time-picker>
-
+<div className="form-group">
+    {{#unless vec}}<span className="form-label">
+      <strong>{{pascal_case field_name}}</strong>
+    </span>{{/unless}}
+    <div className="form-control">
+        <VdDateTime name={`{{field_name~}}{{#if vec}}[${i}]{{/if}}`} value={ new Date({{~entry_name}}.{{field_name~}}{{#if vec}}[i]{{/if}}).toISOString() } onChange={ (e: any) => { e.target.value = (new Date(e.target.value)).toISOString(); handleChange({event: e}) } }{{#if vec}} key={i}{{/if}}{{#if required}} required{{/if}} />
+    </div>
+</div>

@@ -1,0 +1,4 @@
+import { AppAgentWebsocket } from '@holochain/client';
+import { createContext } from 'react'
+
+export const ClientContext = createContext<AppAgentWebsocket | undefined>(undefined);

@@ -1,7 +1,7 @@
 <div className="form-group">
-    <span className="form-label">
+    {{#unless vec}}<span className="form-label">
       <strong>{{pascal_case field_name}}</strong>
-    </span>
+    </span>{{/unless}}
     <div className="form-control">
         <SlSelect name={`{{field_name~}}{{#if vec}}[${i}]{{/if}}`} onSlChange={ (e: any) => handleChange({event: e, data: {type: e.target.value}}) }{{#if vec}} key={i}{{/if}} {{#if required}} required{{/if}} >{{#each field_type.variants}} <SlOption value="{{title_case this}}">{{title_case this}}</SlOption> {{/each}} </SlSelect>
     </div>

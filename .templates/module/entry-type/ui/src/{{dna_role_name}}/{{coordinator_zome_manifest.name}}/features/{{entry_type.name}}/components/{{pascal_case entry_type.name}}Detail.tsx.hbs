@@ -1,0 +1,117 @@
+import React, { useState, useContext, useRef, useEffect } from 'react';
+import { Record, encodeHashToBase64, ActionHashB64 } from '@holochain/client';
+import { ClientContext } from '../../../../../clientContext';
+import { decode } from '@msgpack/msgpack';
+
+import { SlAlert, SlButton, SlIcon, SlSpinner } from '@shoelace-style/shoelace/dist/react';
+
+import Edit{{pascal_case entry_type.name}} from './Edit{{pascal_case entry_type.name}}';
+import { {{pascal_case entry_type.name}}{{#each entry_type.fields}}{{#if (eq field_type.type "Enum")}}, {{field_type.label}}{{/if}}{{/each}} } from '../types';
+
+interface I{{pascal_case entry_type.name}}DetailsProps {
+  {{snake_case entry_type.name}}Hash: ActionHashB64;
+  on{{pascal_case entry_type.name}}Deleted?: () => void;
+}
+
+const {{pascal_case entry_type.name}}Details = ({ {{snake_case entry_type.name}}Hash, on{{pascal_case entry_type.name}}Deleted} : I{{pascal_case entry_type.name}}DetailsProps) => {
+  const client = useContext(ClientContext);
+  const [loading, setLoading] = useState(true);
+  const [editing, setEditing] = useState(false);
+
+  const deleteSuccessRef = useRef<any>(null);
+  const deleteErrorRef = useRef<any>(null);
+
+  const [record, setRecord] = useState<Record>();
+  const [{{snake_case entry_type.name}}, set{{pascal_case entry_type.name}}] = useState<{{pascal_case entry_type.name}}>();
+
+  useEffect(() => {
+    fetch{{pascal_case entry_type.name}}()
+  } ,[])
+
+  const fetch{{pascal_case entry_type.name}} = async () => {
+    setLoading(true);
+
+    try {
+      const maybeRecord: Record = await client!.callZome({
+        cap_secret: null,
+        role_name: '{{dna_role_name}}',
+        zome_name: '{{coordinator_zome_manifest.name}}',
+        fn_name: 'get_{{snake_case entry_type.name}}',
+        payload: {{snake_case entry_type.name}}Hash
+      });
+
+      setRecord(maybeRecord);
+      set{{pascal_case entry_type.name}}(decode((record?.entry as any).Present.entry) as {{pascal_case entry_type.name}})
+    } catch (e: any) {
+      
+    }
+    setLoading(false);
+  };
+
+  const delete{{pascal_case entry_type.name}} = async () => {
+    try {
+      setLoading(true);
+      const maybeRecord: Record = await client!.callZome({
+        cap_secret: null,
+        role_name: '{{dna_role_name}}',
+        zome_name: '{{coordinator_zome_manifest.name}}',
+        fn_name: 'delete_{{snake_case entry_type.name}}',
+        payload: {{snake_case entry_type.name}}Hash
+      });
+      setRecord(undefined);
+      await fetch{{pascal_case entry_type.name}}();
+
+      on{{pascal_case entry_type.name}}Deleted && on{{pascal_case entry_type.name}}Deleted!();
+    } catch (e: any) {
+      deleteErrorRef?.current.toast();
+    }
+  };
+
+  return loading ? <SlSpinner></SlSpinner> :
+    !record ? <p>No record found</p> : (
+    <>
+      <SlAlert variant="success" ref={deleteSuccessRef}>
+        <SlIcon slot="icon" name="check2-circle" />
+        <strong>Delete completed</strong>
+        <br />
+          Your record has been deleted.
+      </SlAlert>
+      <SlAlert variant="warning" ref={deleteErrorRef}>
+        <SlIcon slot="icon" name="exclamation-triangle" />
+        <strong>Oh dear!</strong>
+        <br />
+          There was an error deleting your record.
+      </SlAlert>
+
+      { editing
+        ? <Edit{{pascal_case entry_type.name}}
+            currentRecord={record}
+            original{{pascal_case entry_type.name}}Hash={encodeHashToBase64(record.signed_action.hashed.hash) as ActionHashB64}
+            onEditCanceled={ () => { setEditing(false) } }
+            on{{pascal_case entry_type.name}}Updated={ () => { setEditing(false); fetch{{pascal_case entry_type.name}}() } }
+          />
+        : <div>
+            <span>Your {{title_case entry_type.name}}'s Hash</span>
+            {
+                record && <pre> { JSON.stringify({{snake_case entry_type.name}}Hash, null, 2) }</pre>
+            }
+
+            <SlButton 
+              variant="warning"
+              type="submit"
+              onClick={ () => setEditing(true) }
+            >Edit
+            </SlButton>
+            <SlButton 
+              variant="danger"
+              type="button"
+              onClick={ delete{{pascal_case entry_type.name}} }
+            >Delete
+            </SlButton>
+          </div>
+      }
+    </>
+  );
+};
+
+export default {{pascal_case entry_type.name}}Details;

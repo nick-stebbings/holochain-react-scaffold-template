@@ -1,1 +1,8 @@
-<mwc-textarea outlined label="{{label}}" {{#if variable_to_read}}:value="{{variable_to_read}}" {{/if}}@input="{{variable_to_change}} = $event.target.value" {{#if required}}required{{/if}}></mwc-textarea>
+<div className="form-group">
+    {{#unless vec}}<span className="form-label">
+      <strong>{{pascal_case field_name}}</strong>
+    </span>{{/unless}}
+    <div className="form-control">
+        <SlTextarea name={`{{field_name~}}{{#if vec}}[${i}]{{/if}}`} value={ {{~entry_name}}.{{field_name~}}{{#if vec}}[i]{{/if}} } onSlChange={ (e: any) => handleChange({event: e}) }{{#if vec}} key={i}{{/if}} {{#if required}} required{{/if}} />
+    </div>
+</div>
