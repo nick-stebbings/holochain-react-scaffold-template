@@ -64,17 +64,16 @@ const Edit{{pascal_case entry_type.name}} = ({currentRecord, onEditCanceled, ori
   const handleChange = async ({event: {target}, data} : { event: any } & { data?: any } ) => {
     const value = data && !!data?.type ? data : (target as SlInputElement)?.value || target?.checked // disambiguate between enum field types which have a data payload
 
+    const isDateField : boolean = target.__data && !target.__data.invalid;
     // Vector Field Logic:
     const isVectorField : boolean = !!target.name.match(/\[(\d+)\]$/); // disambiguate between single fields and Vec(array) element fields which have naming convention `fieldname[i]`
     const fieldName = `${target.name}`.split(/\[(\d+)\]$/)[0] as keyof typeof {{snake_case entry_type.name}};
     const tempVector : any = isVectorField && {{snake_case entry_type.name}}[fieldName]; // assign vector to a temporary variable for mutation
     if(isVectorField) { 
       const index : number = +target.name.match(/\[(\d+)\]$/)[1];
-      tempVector[index] = value;
+      tempVector[index] = isDateField ? +(new Date(value)) : value;
     }
     //
-
-    const isDateField : boolean = target.__data && !target.__data.invalid;
 
     set{{pascal_case entry_type.name}}({
       ...{{snake_case entry_type.name}},
