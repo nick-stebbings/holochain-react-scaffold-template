@@ -73,9 +73,11 @@ const Create{{pascal_case entry_type.name}} = ({onCreateCanceled, on{{pascal_cas
     }
     //
 
+    const isDateField : boolean = target.__data && !target.__data.invalid;
+
     set{{pascal_case entry_type.name}}({
       ...{{snake_case entry_type.name}},
-      [target.name]: isVectorField ? tempVector : value
+      [target.name]: isVectorField ? tempVector : (isDateField ? +(new Date(value)) : value)
     });
   }
 

@@ -60,7 +60,7 @@ const Edit{{pascal_case entry_type.name}} = ({currentRecord, onEditCanceled, ori
       updateErrorRef?.current.toast();
     }
   };
-
+    
   const handleChange = async ({event: {target}, data} : { event: any } & { data?: any } ) => {
     const value = data && !!data?.type ? data : (target as SlInputElement)?.value || target?.checked // disambiguate between enum field types which have a data payload
 
@@ -74,11 +74,14 @@ const Edit{{pascal_case entry_type.name}} = ({currentRecord, onEditCanceled, ori
     }
     //
 
+    const isDateField : boolean = target.__data && !target.__data.invalid;
+
     set{{pascal_case entry_type.name}}({
       ...{{snake_case entry_type.name}},
-      [target.name]: isVectorField ? tempVector : value
+      [target.name]: isVectorField ? tempVector : (isDateField ? +(new Date(value)) : value)
     });
   }
+
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
