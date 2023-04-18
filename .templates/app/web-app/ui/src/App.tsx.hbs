@@ -8,7 +8,7 @@ import { SlSpinner } from '@shoelace-style/shoelace/dist/react';
 
 const instructions = [`import { AgentPubKeyB64, AppAgentWebsocket, encodeHashToBase64 } from '@holochain/client';
 import CreateTodo from './todos/todos/features/todo/components/CreateTodo';
-import TodoDetails from './todos/todos/features/todo/components/TodoDetails';`,
+import TodoDetails from './todos/todos/features/todo/components/TodoDetail';`,
  `const [hash, setHash] = useState<AgentPubKeyB64>();`,
  `<CreateTodo onCreateCanceled={() => {}} onTodoCreated={(ah: any) => {setHash(encodeHashToBase64(ah))}}></CreateTodo>            
 { hash && <TodoDetails todoHash={hash} ></TodoDetails>}`]
