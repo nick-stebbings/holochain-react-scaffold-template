@@ -1,1 +1,8 @@
-<VdDateTime label="{{label}}" name="{{field_name~}}{{#if vec}}[{{key}}]{{/if}}" value={ new Date({{~entry_name}}.{{field_name~}}).toISOString() } onChange={ (e: any) => { e.target.value = (new Date(e.target.value)).toISOString(); handleChange({event: e}) } }{{#if vec}} key={ {{key}} }{{/if}}{{#if required}} required{{/if}} />
+<div className="form-group">
+    <span className="form-label">
+      <strong>{{pascal_case field_name}}</strong>
+    </span>
+    <div className="form-control">
+        <VdDateTime name="{{field_name~}}{{#if vec}}[{{key}}]{{/if}}" value={ new Date({{~entry_name}}.{{field_name~}}).toISOString() } onChange={ (e: any) => { e.target.value = (new Date(e.target.value)).toISOString(); handleChange({event: e}) } }{{#if vec}} key={ {{key}} }{{/if}}{{#if required}} required{{/if}} />
+    </div>
+</div>
