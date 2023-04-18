@@ -1,3 +1,8 @@
-<mwc-formfield label="{{label}}">
-  <mwc-checkbox {{#if variable_to_read}}:checked="{{variable_to_read}}" {{/if}}@change="{{variable_to_change}} = $event.target.checked"></mwc-checkbox>
-</mwc-formfield>
+<div className="form-group">
+    {{#unless vec}}<span className="form-label">
+      <strong>{{pascal_case field_name}}</strong>
+    </span>{{/unless}}
+    <div className="form-control">
+        <SlCheckbox name={`{{field_name~}}{{#if vec}}[${i}]{{/if}}`} size="medium" checked={ {{~entry_name}}.{{field_name~}}{{#if vec}}[i]{{/if}} } onSlChange={ (e: any) => handleChange({event: e})  }{{#if vec}} key={i}{{/if}} {{#if required}} required{{/if}} />
+    </div>
+</div>
