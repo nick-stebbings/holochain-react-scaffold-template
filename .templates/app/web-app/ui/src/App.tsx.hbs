@@ -6,6 +6,13 @@ import './style.css'
 
 import { SlSpinner } from '@shoelace-style/shoelace/dist/react';
 
+const instructions = [`import { AgentPubKeyB64, AppAgentWebsocket, encodeHashToBase64 } from '@holochain/client';
+import CreateTodo from './todos/todos/features/todo_item/components/CreateTodo.tsx';
+import TodoDetails from './todos/todos/features/todo_item/components/TodoDetails.tsx';`,
+ `const [hash, setHash] = useState<AgentPubKeyB64>();`,
+ `<CreateTodo onCreateCanceled={() => {}} onTodoCreated={(ah: any) => {setHash(encodeHashToBase64(ah))}}></CreateTodo>            
+{ hash && <TodoDetails todoHash={hash} ></TodoDetails>}`]
+
 function App() {
     const [loading, setLoading] = useState(true);
     const [count, setCount] = useState<number>(0);
@@ -49,23 +56,21 @@ function App() {
                             <li>Import the element and needed dependencies with: <br />
                                 <pre>
                                     <code>
-                                        import { AgentPubKeyB64, AppAgentWebsocket, encodeHashToBase64 } from '@holochain/client';<br>
-                                        import CreateTodo from './todos/todos/features/todo_item/components/CreateTodo.tsx';
-                                        import TodoDetails from './todos/todos/features/todo_item/components/TodoDetails.tsx';<br>
+                                        {instructions[0]}
                                     </code>
                                 </pre>
                             </li> <br /> <br />
                             <li>Add some state management (at the top of your App component code) so that your Details/Edit component will re-render on creating your Todo<br />
                                 <pre>
                                     <code>
-                                        const [hash, setHash] = useState&lt;AgentPubKeyB64&gt;();
+                                        {instructions[1]}
                                     </code>
                                 </pre>
                             </li>
                             <li>Replace this "EDIT ME!" section with <br />
                                 <pre>
                                     <code>
-                                        &lt;CreateTodo onCreateCanceled={() =&gt; {}} onTodoCreated={(actionHash: any) =&gt; {setHash(encodeHashToBase64(actionHash))}}&gt;&lt;/CreateTodo&gt; { hash &amp;&amp; &lt;TodoDetails todoHash={hash} &gt;&lt;/TodoDetails&gt;}
+                                        {instructions[2]}
                                     </code>
                                 </pre>
                             </li>
